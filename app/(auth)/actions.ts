@@ -45,13 +45,28 @@ export async function signup(formData: FormData) {
     return redirect('/signup?error=' + encodeURIComponent(validationError));
   }
 
-  const { error } = await supabase.auth.signUp({ email, password });
+  const { data, error } = await supabase.auth.signUp({ 
+    email, 
+    password,
+    options: {
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/callback`
+    }
+  });
 
   if (error) {
     return redirect('/signup?error=' + encodeURIComponent(error.message));
   }
 
-  redirect('/signup?message=Check+your+email+to+confirm+your+account');
+  // Check if email confirmation is required
+  // If data.session is null, email confirmation is needed
+  if (data.session === null) {
+    // Email confirmation required - tell user to check email
+    redirect('/signup?message=Check+your+email+to+confirm+your+account');
+  } else {
+    // No email confirmation needed - user is logged in
+    revalidatePath("/", "layout");
+    redirect("/dashboard");
+  }
 }
 
 export async function logout() {

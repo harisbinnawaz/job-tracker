@@ -32,6 +32,12 @@ export async function updateSession(request: NextRequest) {
     // Redirect unauthenticated users away from protected routes
     const isAuthPage = request.nextUrl.pathname.startsWith("/login") ||
                        request.nextUrl.pathname.startsWith("/signup");
+    const isAuthCallback = request.nextUrl.pathname.startsWith("/auth/callback");
+
+    // Allow auth callback route to pass through
+    if (isAuthCallback) {
+      return supabaseResponse;
+    }
 
     if (!user && !isAuthPage && request.nextUrl.pathname !== "/") {
       const url = request.nextUrl.clone();
