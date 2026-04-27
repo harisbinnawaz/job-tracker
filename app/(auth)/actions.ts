@@ -13,7 +13,7 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    redirect(`/login?error=${encodeURIComponent(error.message)}`);
+    return redirect('/login?error=' + encodeURIComponent(error.message));
   }
 
   revalidatePath("/", "layout");
@@ -29,11 +29,10 @@ export async function signup(formData: FormData) {
   const { error } = await supabase.auth.signUp({ email, password });
 
   if (error) {
-    redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+    return redirect('/signup?error=' + encodeURIComponent(error.message));
   }
 
-  revalidatePath("/", "layout");
-  redirect("/dashboard");
+  redirect('/signup?message=Check+your+email+to+confirm+your+account');
 }
 
 export async function logout() {

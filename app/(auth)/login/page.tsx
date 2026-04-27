@@ -3,7 +3,7 @@ import { login } from "../actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { BriefcaseBusiness } from "lucide-react";
+import { BriefcaseBusiness, ArrowRight } from "lucide-react";
 
 interface LoginPageProps {
   searchParams: Promise<{ error?: string }>;
@@ -13,32 +13,35 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const { error } = await searchParams;
 
   return (
-    <div className="flex min-h-[calc(100vh-3.5rem)] items-center justify-center">
-      <div className="w-full max-w-sm">
+    <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center p-4">
+      <div className="w-full max-w-sm relative">
+        {/* Glow behind the card */}
+        <div className="absolute inset-0 bg-violet-600/20 blur-[100px] rounded-full pointer-events-none" />
+        
         {/* Header */}
-        <div className="mb-8 text-center">
-          <div className="mb-4 inline-flex items-center justify-center rounded-lg bg-zinc-800 p-3">
-            <BriefcaseBusiness className="h-6 w-6 text-zinc-300" />
+        <div className="mb-6 text-center relative z-10">
+          <div className="mb-4 inline-flex items-center justify-center rounded-2xl bg-gradient-to-tr from-violet-500/20 to-fuchsia-500/20 p-3.5 border border-white/10 shadow-[0_0_30px_rgba(139,92,246,0.3)]">
+            <BriefcaseBusiness className="h-7 w-7 text-violet-400" />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-100">
+          <h1 className="text-3xl font-bold tracking-tight text-white mb-2">
             Welcome back
           </h1>
-          <p className="mt-1 text-sm text-zinc-400">
+          <p className="text-sm text-zinc-400">
             Sign in to your account to continue.
           </p>
         </div>
 
         {/* Card */}
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 shadow-sm">
+        <div className="glass-panel p-6 sm:p-8 rounded-2xl relative z-10">
           {error && (
-            <div className="mb-4 rounded-md border border-red-900 bg-red-950/30 px-3 py-2 text-sm text-red-400">
+            <div className="mb-6 rounded-lg border border-red-500/50 bg-red-500/10 px-4 py-3 text-sm text-red-200 backdrop-blur-md">
               {decodeURIComponent(error)}
             </div>
           )}
 
           <form action={login} className="space-y-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="email">Email</Label>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-zinc-300">Email Address</Label>
               <Input
                 id="email"
                 name="email"
@@ -46,10 +49,13 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                 placeholder="you@example.com"
                 required
                 autoComplete="email"
+                className="bg-black/50 border-white/10 focus:border-violet-500/50 focus:ring-violet-500/20 h-11 transition-all"
               />
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="password">Password</Label>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="text-zinc-300">Password</Label>
+              </div>
               <Input
                 id="password"
                 name="password"
@@ -57,19 +63,21 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                 placeholder="••••••••"
                 required
                 autoComplete="current-password"
+                className="bg-black/50 border-white/10 focus:border-violet-500/50 focus:ring-violet-500/20 h-11 transition-all"
               />
             </div>
-            <Button type="submit" className="mt-2 w-full">
+            <Button type="submit" className="mt-4 w-full h-11 bg-zinc-100 hover:bg-white text-zinc-900 font-medium tracking-wide transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] group">
               Sign in
+              <ArrowRight className="ml-2 h-4 w-4 opacity-70 group-hover:translate-x-1 transition-transform" />
             </Button>
           </form>
         </div>
 
-        <p className="mt-4 text-center text-sm text-zinc-400">
-          No account?{" "}
+        <p className="mt-6 text-center text-sm text-zinc-400 relative z-10">
+          Don't have an account?{" "}
           <Link
             href="/signup"
-            className="font-medium text-zinc-300 underline underline-offset-4 hover:text-zinc-100"
+            className="font-medium text-violet-400 hover:text-violet-300 hover:underline underline-offset-4 transition-colors"
           >
             Create one
           </Link>

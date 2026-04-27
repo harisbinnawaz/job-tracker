@@ -2,17 +2,18 @@
 
 @layer base {
   :root {
-    --background: #09090b;
-    --foreground: #f4f4f5;
-    --surface: #18181b;
-    --surface-hover: #27272a;
-    --border: #27272a;
-    --muted: #a1a1aa;
-    --accent: #e4e4e7;
+    --background: #050505;
+    --foreground: #fafafa;
+    --surface: #121212;
+    --surface-hover: #1a1a1a;
+    --border: #262626;
+    --muted: #a3a3a3;
+    --accent: #8b5cf6; /* violet-500 */
+    --accent-glow: rgba(139, 92, 246, 0.5);
   }
 
   * {
-    border-color: #27272a;
+    border-color: var(--border);
   }
 
   body {
@@ -20,11 +21,40 @@
     color: var(--foreground);
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   /* Smooth focus rings — accessibility */
   :focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--accent), 0 0 0 4px var(--background);
+    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--accent);
+  }
+
+  /* Custom Scrollbar for a premium feel */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_4px_24px_-8px_rgba(0,0,0,0.5)];
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-zinc-200 to-zinc-500;
+  }
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-[0_0_20px_var(--accent-glow)] hover:border-[var(--accent)]/50;
   }
 }

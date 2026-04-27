@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "JobTracker — Manage Your Applications",
-  description: "A clean, minimal job application tracking tool.",
+  description: "A premium, minimal job application tracking tool.",
 };
 
 export default function RootLayout({
@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased relative min-h-screen bg-zinc-950`}
       >
         <ThemeProvider
           attribute="class"
@@ -36,6 +36,12 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          {/* Ambient Background Elements */}
+          <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-violet-900/20 blur-[120px]" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-900/10 blur-[120px]" />
+          </div>
+
           <Navbar />
           <main className="mx-auto max-w-6xl px-4 sm:px-6 py-8">
             {children}

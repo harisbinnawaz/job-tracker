@@ -1,5 +1,5 @@
 import { getJobs } from "../actions";
-import { JobsTable } from "@/components/jobs/jobs-table";
+import JobsTableShell from "@/components/jobs/jobs-table-shell";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
@@ -10,5 +10,5 @@ export default async function DashboardPage() {
 
   const jobs = await getJobs();
 
-  return <JobsTable initialJobs={jobs ?? []} />;
+  return <JobsTableShell initialJobs={jobs ?? []} />;
 }
