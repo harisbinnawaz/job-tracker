@@ -48,14 +48,14 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
       const q = searchQuery.toLowerCase();
       result = result.filter(
         (job) =>
-          job.company_name.toLowerCase().includes(q) ||
-          job.job_title.toLowerCase().includes(q)
+          (job.company_name?.toLowerCase() || "").includes(q) ||
+          (job.job_title?.toLowerCase() || "").includes(q)
       );
     }
 
     result.sort((a, b) => {
-      const dateA = parseISO(a.date_applied);
-      const dateB = parseISO(b.date_applied);
+      const dateA = parseISO(a.date_applied || "1970-01-01");
+      const dateB = parseISO(b.date_applied || "1970-01-01");
       return sortOrder === "desc"
         ? dateB.getTime() - dateA.getTime()
         : dateA.getTime() - dateB.getTime();

@@ -4,8 +4,15 @@ import { createClient } from "@/lib/supabase/server";
 import { BriefcaseBusiness } from "lucide-react";
 
 export async function Navbar() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+    user = data?.user;
+  } catch (error) {
+    console.error("Navbar error:", error);
+    // Continue without user info
+  }
 
   return (
     <header className="sticky top-0 z-40 w-full glass-panel border-b-0 border-white/5 bg-black/40">

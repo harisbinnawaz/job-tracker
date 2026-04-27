@@ -4,11 +4,16 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) redirect("/login");
 
-  const jobs = await getJobs();
+    const jobs = await getJobs();
 
-  return <JobsTableShell initialJobs={jobs ?? []} />;
+    return <JobsTableShell initialJobs={jobs ?? []} />;
+  } catch (error) {
+    console.error("Dashboard page error:", error);
+    return <JobsTableShell initialJobs={[]} />;
+  }
 }
