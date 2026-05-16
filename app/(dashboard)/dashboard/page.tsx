@@ -3,6 +3,8 @@ import JobsTableShell from "@/components/jobs/jobs-table-shell";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   try {
     const supabase = await createClient();
