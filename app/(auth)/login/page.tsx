@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { BriefcaseBusiness, ArrowRight } from "lucide-react";
 
 interface LoginPageProps {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; message?: string }>;
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const { error } = await searchParams;
+  const { error, message } = await searchParams;
 
   return (
     <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center p-4">
@@ -33,6 +33,12 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
         {/* Card */}
         <div className="glass-panel p-6 sm:p-8 rounded-2xl relative z-10">
+          {message && (
+            <div className="mb-6 rounded-lg border border-green-500/50 bg-green-500/10 px-4 py-3 text-sm text-green-200 backdrop-blur-md">
+              {decodeURIComponent(message)}
+            </div>
+          )}
+
           {error && (
             <div className="mb-6 rounded-lg border border-red-500/50 bg-red-500/10 px-4 py-3 text-sm text-red-200 backdrop-blur-md">
               {decodeURIComponent(error)}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { createJob, updateJob } from "@/app/(dashboard)/actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,8 +20,17 @@ interface JobFormModalProps {
   onClose: () => void;
 }
 
+function isNextRedirectError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "digest" in error &&
+    typeof (error as { digest: unknown }).digest === "string" &&
+    (error as { digest: string }).digest.startsWith("NEXT_REDIRECT")
+  );
+}
+
 export function JobFormModal({ job, open, onClose }: JobFormModalProps) {
-  const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -70,32 +78,32 @@ export function JobFormModal({ job, open, onClose }: JobFormModalProps) {
 
     const normalizedStatus = normalizeJobStatus(status);
 
-    try {
-      const payload = {
-        company_name: company,
-        job_title: title,
-        experience_required: experienceRequired,
-        date_applied: dateApplied,
-        status: normalizedStatus,
-        job_link: jobLink || null,
-        notes: notes || null,
-      };
+    const payload = {
+      company_name: company,
+      job_title: title,
+      experience_required: experienceRequired,
+      date_applied: dateApplied,
+      status: normalizedStatus,
+      job_link: jobLink || null,
+      notes: notes || null,
+    };
 
+    try {
       if (job) {
         await updateJob(job.id, payload);
       } else {
         await createJob(payload as JobInsert);
       }
-
-      router.refresh();
-      onClose();
     } catch (err) {
+      if (isNextRedirectError(err)) throw err;
       const message = err instanceof Error ? err.message : "An error occurred";
       setError(message);
-      console.error("Form submission error:", err);
-    } finally {
       setIsPending(false);
+      return;
     }
+
+    setIsPending(false);
+    onClose();
   };
 
   if (!open) {

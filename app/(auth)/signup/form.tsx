@@ -8,6 +8,16 @@ import { useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { ArrowRight } from "lucide-react";
 
+function isNextRedirectError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "digest" in error &&
+    typeof (error as { digest: unknown }).digest === "string" &&
+    (error as { digest: string }).digest.startsWith("NEXT_REDIRECT")
+  );
+}
+
 function validatePassword(password: string): string | null {
   if (password.length < 8) {
     return "Password must be at least 8 characters long";
@@ -24,7 +34,6 @@ function validatePassword(password: string): string | null {
 export function SignupForm() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
-  const message = searchParams.get("message");
   const [passwordMismatch, setPasswordMismatch] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -57,6 +66,7 @@ export function SignupForm() {
       try {
         await signup(formData);
       } catch (err) {
+        if (isNextRedirectError(err)) throw err;
         console.error("Signup error:", err);
       }
     });
@@ -64,12 +74,6 @@ export function SignupForm() {
 
   return (
     <>
-      {message && (
-        <div className="mb-6 rounded-lg border border-green-500/50 bg-green-500/10 px-4 py-3 text-sm text-green-200 backdrop-blur-md">
-          {decodeURIComponent(message)}
-        </div>
-      )}
-
       {(error || passwordMismatch || passwordError) && (
         <div className="mb-6 rounded-lg border border-red-500/50 bg-red-500/10 px-4 py-3 text-sm text-red-200 backdrop-blur-md">
           {passwordMismatch

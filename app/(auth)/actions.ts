@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getSiteUrl } from "@/lib/site-url";
 
 function validatePassword(password: string): string | null {
   if (password.length < 8) {
@@ -30,7 +29,6 @@ export async function login(formData: FormData) {
     redirect(`/login?error=${encodeURIComponent(error.message)}`);
   }
 
-  // Persist refreshed session cookies before navigation
   await supabase.auth.getUser();
 
   revalidatePath("/", "layout");
@@ -48,29 +46,16 @@ export async function signup(formData: FormData) {
     redirect(`/signup?error=${encodeURIComponent(validationError)}`);
   }
 
-  const siteUrl = await getSiteUrl();
-  const emailRedirectTo = `${siteUrl}/auth/callback?next=/dashboard`;
-
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo,
-    },
-  });
+  const { error } = await supabase.auth.signUp({ email, password });
 
   if (error) {
     redirect(`/signup?error=${encodeURIComponent(error.message)}`);
   }
 
-  if (data.session) {
-    await supabase.auth.getUser();
-    revalidatePath("/", "layout");
-    redirect("/dashboard");
-  }
+  await supabase.auth.signOut();
 
   redirect(
-    `/signup?message=${encodeURIComponent("Check your email to confirm your account before signing in.")}`
+    "/login?message=Account+created+successfully.+Please+sign+in."
   );
 }
 
