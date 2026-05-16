@@ -145,4 +145,4 @@ middleware.ts        # session refresh + route guards
 
 ## License
 
-Private portfolio project. All rights reserved.
+Private portfolio project. All rights reserved By Muhammad Haris Bin Nawaz.
