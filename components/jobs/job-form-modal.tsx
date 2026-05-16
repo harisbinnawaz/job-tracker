@@ -7,7 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import type { Job, JobInsert, JobStatus } from "@/lib/types";
+import {
+  JOB_STATUSES,
+  normalizeJobStatus,
+  type Job,
+  type JobInsert,
+  type JobStatus,
+} from "@/lib/types";
 
 interface JobFormModalProps {
   job?: Job;
@@ -32,13 +38,12 @@ export function JobFormModal({ job, open, onClose }: JobFormModalProps) {
 
   // Reset form state when modal opens or job changes
   useEffect(() => {
-    console.log("JobFormModal useEffect:", { open, job });
     if (open) {
       setCompany(job?.company_name || "");
       setTitle(job?.job_title || "");
       setExperienceRequired(job?.experience_required || "Fresh");
       setDateApplied(job?.date_applied || "");
-      setStatus(job?.status || "Applied");
+      setStatus(normalizeJobStatus(job?.status));
       setJobLink(job?.job_link || "");
       setNotes(job?.notes || "");
       setError(null);
@@ -63,13 +68,15 @@ export function JobFormModal({ job, open, onClose }: JobFormModalProps) {
       return;
     }
 
+    const normalizedStatus = normalizeJobStatus(status);
+
     try {
       const payload = {
         company_name: company,
         job_title: title,
         experience_required: experienceRequired,
         date_applied: dateApplied,
-        status,
+        status: normalizedStatus,
         job_link: jobLink || null,
         notes: notes || null,
       };
@@ -92,11 +99,8 @@ export function JobFormModal({ job, open, onClose }: JobFormModalProps) {
   };
 
   if (!open) {
-    console.log("JobFormModal returning null, open:", open);
     return null;
   }
-
-  console.log("JobFormModal rendering, job:", job);
 
   return (
     <div
@@ -193,14 +197,17 @@ export function JobFormModal({ job, open, onClose }: JobFormModalProps) {
               <select
                 id="status"
                 value={status}
-                onChange={(e) => setStatus(e.target.value as JobStatus)}
+                onChange={(e) =>
+                  setStatus(normalizeJobStatus(e.target.value))
+                }
+                required
                 className="h-11 w-full rounded-lg border border-white/10 bg-black/50 px-3 text-sm text-zinc-100 transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 outline-none"
               >
-                <option value="Applied">Applied</option>
-                <option value="Interviewing">Interviewing</option>
-                <option value="Interviewed">Interviewed</option>
-                <option value="Offer">Offer</option>
-                <option value="Rejected">Rejected</option>
+                {JOB_STATUSES.map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
               </select>
             </div>
 

@@ -15,11 +15,6 @@ const statusConfig: Record<
     className:
       "bg-amber-500/10 text-amber-300 border border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.2)]",
   },
-  Interviewed: {
-    label: "Interviewed",
-    className:
-      "bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.2)]",
-  },
   Offer: {
     label: "Offer",
     className:
@@ -33,7 +28,9 @@ const statusConfig: Record<
 };
 
 export function StatusBadge({ status }: { status: JobStatus }) {
-  const config = statusConfig[status];
+  const config =
+    statusConfig[status] ??
+    statusConfig.Applied;
   return (
     <span
       className={cn(

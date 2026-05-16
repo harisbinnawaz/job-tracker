@@ -3,7 +3,20 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import type { JobInsert, JobUpdate } from "@/lib/types";
+import {
+  isJobStatus,
+  type JobInsert,
+  type JobStatus,
+  type JobUpdate,
+} from "@/lib/types";
+
+function assertValidJobPayload(payload: JobInsert | JobUpdate) {
+  if (payload.status !== undefined && !isJobStatus(payload.status)) {
+    throw new Error(
+      `Invalid status "${payload.status}". Must be one of: Applied, Interviewing, Offer, Rejected.`
+    );
+  }
+}
 
 // --- READ ---
 export async function getJobs() {
@@ -35,6 +48,8 @@ export async function getJobs() {
 // --- CREATE ---
 export async function createJob(payload: JobInsert) {
   try {
+    assertValidJobPayload(payload);
+
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
@@ -44,7 +59,11 @@ export async function createJob(payload: JobInsert) {
 
     const { error } = await supabase
       .from("jobs")
-      .insert({ ...payload, user_id: user.id });
+      .insert({
+        ...payload,
+        status: payload.status as JobStatus,
+        user_id: user.id,
+      });
 
     if (error) {
       console.error("Error creating job:", error);
@@ -60,6 +79,8 @@ export async function createJob(payload: JobInsert) {
 // --- UPDATE ---
 export async function updateJob(id: string, payload: JobUpdate) {
   try {
+    assertValidJobPayload(payload);
+
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {

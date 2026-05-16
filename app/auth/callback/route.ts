@@ -1,20 +1,27 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/dashboard";
+  const requestUrl = new URL(request.url);
+  const code = requestUrl.searchParams.get("code");
+  let next = requestUrl.searchParams.get("next") ?? "/dashboard";
+
+  if (!next.startsWith("/")) {
+    next = "/dashboard";
+  }
 
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
-    
+
     if (!error) {
-      return NextResponse.redirect(new URL(next, request.url));
+      revalidatePath("/", "layout");
+      return NextResponse.redirect(new URL(next, requestUrl.origin));
     }
   }
 
-  // Return the user to the signup page with an error if something went wrong
-  return NextResponse.redirect(new URL("/login?error=Email+confirmation+failed", request.url));
+  return NextResponse.redirect(
+    new URL("/login?error=Email+confirmation+failed", requestUrl.origin)
+  );
 }

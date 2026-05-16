@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getSiteUrl } from "@/lib/site-url";
 
 function validatePassword(password: string): string | null {
   if (password.length < 8) {
@@ -26,8 +27,11 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    return redirect('/login?error=' + encodeURIComponent(error.message));
+    redirect(`/login?error=${encodeURIComponent(error.message)}`);
   }
+
+  // Persist refreshed session cookies before navigation
+  await supabase.auth.getUser();
 
   revalidatePath("/", "layout");
   redirect("/dashboard");
@@ -39,34 +43,35 @@ export async function signup(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  // Validate password
   const validationError = validatePassword(password);
   if (validationError) {
-    return redirect('/signup?error=' + encodeURIComponent(validationError));
+    redirect(`/signup?error=${encodeURIComponent(validationError)}`);
   }
 
-  const { data, error } = await supabase.auth.signUp({ 
-    email, 
+  const siteUrl = await getSiteUrl();
+  const emailRedirectTo = `${siteUrl}/auth/callback?next=/dashboard`;
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
     password,
     options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/callback`
-    }
+      emailRedirectTo,
+    },
   });
 
   if (error) {
-    return redirect('/signup?error=' + encodeURIComponent(error.message));
+    redirect(`/signup?error=${encodeURIComponent(error.message)}`);
   }
 
-  // Check if email confirmation is required
-  // If data.session is null, email confirmation is needed
-  if (data.session === null) {
-    // Email confirmation required - tell user to check email
-    redirect('/signup?message=Check+your+email+to+confirm+your+account');
-  } else {
-    // No email confirmation needed - user is logged in
+  if (data.session) {
+    await supabase.auth.getUser();
     revalidatePath("/", "layout");
     redirect("/dashboard");
   }
+
+  redirect(
+    `/signup?message=${encodeURIComponent("Check your email to confirm your account before signing in.")}`
+  );
 }
 
 export async function logout() {

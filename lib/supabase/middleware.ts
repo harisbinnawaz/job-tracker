@@ -1,60 +1,65 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+function applyCookies(
+  target: NextResponse,
+  source: NextResponse
+): NextResponse {
+  source.cookies.getAll().forEach((cookie) => {
+    target.cookies.set(cookie);
+  });
+  return target;
+}
+
 export async function updateSession(request: NextRequest) {
-  try {
-    let supabaseResponse = NextResponse.next({ request });
+  let supabaseResponse = NextResponse.next({ request });
 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll();
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value }) =>
-              request.cookies.set(name, value)
-            );
-            supabaseResponse = NextResponse.next({ request });
-            cookiesToSet.forEach(({ name, value, options }) =>
-              supabaseResponse.cookies.set(name, value, options)
-            );
-          },
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
         },
-      }
-    );
-
-    // Refresh session — do not remove this block
-    const { data: { user } } = await supabase.auth.getUser();
-
-    // Redirect unauthenticated users away from protected routes
-    const isAuthPage = request.nextUrl.pathname.startsWith("/login") ||
-                       request.nextUrl.pathname.startsWith("/signup");
-    const isAuthCallback = request.nextUrl.pathname.startsWith("/auth/callback");
-
-    // Allow auth callback route to pass through
-    if (isAuthCallback) {
-      return supabaseResponse;
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          );
+          supabaseResponse = NextResponse.next({ request });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          );
+        },
+      },
     }
+  );
 
-    if (!user && !isAuthPage && request.nextUrl.pathname !== "/") {
-      const url = request.nextUrl.clone();
-      url.pathname = "/login";
-      return NextResponse.redirect(url);
-    }
+  // Refresh session — do not remove this block
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    if (user && isAuthPage) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/dashboard";
-      return NextResponse.redirect(url);
-    }
+  const pathname = request.nextUrl.pathname;
+  const isAuthPage =
+    pathname.startsWith("/login") || pathname.startsWith("/signup");
+  const isAuthCallback = pathname.startsWith("/auth/callback");
 
+  if (isAuthCallback) {
     return supabaseResponse;
-  } catch (error) {
-    // Handle errors gracefully - return the original request
-    console.error("Middleware error:", error);
-    return NextResponse.next({ request });
   }
+
+  if (!user && !isAuthPage && pathname !== "/") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    return applyCookies(NextResponse.redirect(url), supabaseResponse);
+  }
+
+  if (user && isAuthPage) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard";
+    return applyCookies(NextResponse.redirect(url), supabaseResponse);
+  }
+
+  return supabaseResponse;
 }

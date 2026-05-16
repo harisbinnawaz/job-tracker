@@ -176,7 +176,6 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
           <option value="All">All statuses</option>
           <option value="Applied">Applied</option>
           <option value="Interviewing">Interviewing</option>
-          <option value="Interviewed">Interviewed</option>
           <option value="Offer">Offer</option>
           <option value="Rejected">Rejected</option>
         </select>
