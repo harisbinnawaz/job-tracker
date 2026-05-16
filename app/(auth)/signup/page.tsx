@@ -3,6 +3,8 @@ import { BriefcaseBusiness } from "lucide-react";
 import { Suspense } from "react";
 import { SignupForm } from "./form";
 
+export const dynamic = "force-dynamic";
+
 function SignupFormFallback() {
   return (
     <div className="space-y-4">

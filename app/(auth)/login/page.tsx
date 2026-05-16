@@ -5,6 +5,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { BriefcaseBusiness, ArrowRight } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 interface LoginPageProps {
   searchParams: Promise<{ error?: string; message?: string }>;
 }
