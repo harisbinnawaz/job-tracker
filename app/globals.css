@@ -24,6 +24,20 @@
     overflow-x: hidden;
   }
 
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 420ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  ::view-transition-old(root) {
+    animation-name: route-view-fade-out;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: route-view-fade-in;
+  }
+
   /* Smooth focus rings — accessibility */
   :focus-visible {
     outline: none;
@@ -56,5 +70,84 @@
   }
   .hover-glow {
     @apply transition-all duration-300 hover:shadow-[0_0_20px_var(--accent-glow)] hover:border-[var(--accent)]/50;
+  }
+}
+
+@keyframes route-view-fade-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0) scale(0.985);
+    filter: blur(8px);
+  }
+}
+
+@keyframes route-view-fade-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.985);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes route-enter-auth {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.985);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes route-enter-dashboard {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+.route-transition {
+  min-height: 100vh;
+  will-change: opacity, transform, filter;
+}
+
+.route-transition-auth {
+  animation: route-enter-auth 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.route-transition-dashboard {
+  animation: route-enter-dashboard 440ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  .route-transition-auth,
+  .route-transition-dashboard {
+    animation-duration: 1ms;
+    animation-iteration-count: 1;
+  }
+
+  .route-transition {
+    will-change: auto;
   }
 }
