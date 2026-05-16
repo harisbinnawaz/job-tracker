@@ -112,11 +112,11 @@ export function JobFormModal({ job, open, onClose }: JobFormModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm p-4 flex items-center justify-center"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg glass-panel rounded-2xl shadow-2xl relative flex flex-col max-h-[90vh] border border-white/10 bg-zinc-950/80 overflow-hidden"
+        className="glass-panel organic-rise-in relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/95 shadow-2xl shadow-black/60"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Glow behind the modal */}
@@ -274,5 +274,4 @@ export function JobFormModal({ job, open, onClose }: JobFormModalProps) {
     </div>
   );
 }
-
 

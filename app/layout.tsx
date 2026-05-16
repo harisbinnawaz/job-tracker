@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { RouteTransitionShell } from "@/components/ui/route-transition-shell";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,7 +41,7 @@ export default function RootLayout({
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-900/10 blur-[120px]" />
           </div>
 
-          <RouteTransitionShell>{children}</RouteTransitionShell>
+          {children}
         </ThemeProvider>
       </body>
     </html>

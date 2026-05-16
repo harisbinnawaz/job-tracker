@@ -33,7 +33,7 @@ export default function SignupPage() {
         </p>
       </header>
 
-      <div className="glass-panel w-full rounded-2xl p-6 sm:p-8">
+      <div className="glass-panel organic-rise-in w-full rounded-2xl p-6 sm:p-8">
         <Suspense fallback={<SignupFormFallback />}>
           <SignupForm />
         </Suspense>

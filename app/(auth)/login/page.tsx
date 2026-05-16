@@ -30,7 +30,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </p>
       </header>
 
-      <div className="glass-panel w-full rounded-2xl p-6 sm:p-8">
+      <div className="glass-panel organic-rise-in w-full rounded-2xl p-6 sm:p-8">
         {message && (
           <div className="mb-6 rounded-lg border border-green-500/50 bg-green-500/10 px-4 py-3 text-sm text-green-200 backdrop-blur-md">
             {decodeURIComponent(message)}

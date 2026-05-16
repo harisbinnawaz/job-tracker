@@ -242,10 +242,11 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {filteredJobs.map((job) => (
+              {filteredJobs.map((job, index) => (
                 <tr
                   key={job.id}
-                  className="hover:bg-white/5 transition-colors group"
+                  className="organic-rise-row group transition-colors hover:bg-white/5"
+                  style={{ animationDelay: `${Math.min(index * 42, 260)}ms` }}
                 >
                   <td className="px-5 py-4 text-sm font-medium text-white">
                     {job.company_name}
