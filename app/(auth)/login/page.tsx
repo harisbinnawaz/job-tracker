@@ -15,25 +15,22 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const { error, message } = await searchParams;
 
   return (
-    <div className="relative mx-auto flex w-full max-w-sm flex-col items-center">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 h-48 w-48 -translate-x-1/2 rounded-full bg-violet-600/20 blur-[100px]"
-      />
-
-      <div className="mb-5 w-full text-center">
-        <div className="mb-4 inline-flex items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-tr from-violet-500/20 to-fuchsia-500/20 p-3.5 shadow-[0_0_30px_rgba(139,92,246,0.3)]">
-          <BriefcaseBusiness className="h-7 w-7 text-violet-400" />
+    <div className="mx-auto flex w-full max-w-sm flex-col items-stretch">
+      <header className="mb-6 flex w-full flex-col items-center text-center">
+        <div className="mb-4 flex w-full justify-center">
+          <div className="flex size-[3.25rem] shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-tr from-violet-500/20 to-fuchsia-500/20 shadow-[0_0_30px_rgba(139,92,246,0.3)]">
+            <BriefcaseBusiness className="h-7 w-7 text-violet-400" />
+          </div>
         </div>
-        <h1 className="mb-2 text-3xl font-bold tracking-tight text-white">
+        <h1 className="mb-2 w-full text-3xl font-bold tracking-tight text-white">
           Welcome back
         </h1>
-        <p className="text-sm text-zinc-400">
+        <p className="w-full text-sm text-zinc-400">
           Sign in to your account to continue.
         </p>
-      </div>
+      </header>
 
-      <div className="glass-panel relative z-10 w-full rounded-2xl p-6 sm:p-8">
+      <div className="glass-panel w-full rounded-2xl p-6 sm:p-8">
         {message && (
           <div className="mb-6 rounded-lg border border-green-500/50 bg-green-500/10 px-4 py-3 text-sm text-green-200 backdrop-blur-md">
             {decodeURIComponent(message)}
