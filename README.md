@@ -1,4 +1,6 @@
-# JobTracker
+# 💼 JobTracker
+
+<p align="center">
 
 ![Next.js](https://img.shields.io/badge/Next.js_16-000000?style=flat-square&logo=next.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
@@ -9,21 +11,35 @@
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white)
 ![Resend](https://img.shields.io/badge/Resend-000000?style=flat-square&logo=resend&logoColor=white)
 
-> **Production-grade job application tracker** — a minimalist, full-stack SaaS-style web app for capturing, filtering, and managing hiring pipelines with enterprise auth patterns and zero-trust data access.
+</p>
+
+<br>
+
+> ### 🎯 Production-grade job application tracker
+>
+> A minimalist, full-stack SaaS-style web app for capturing, filtering, and managing hiring pipelines with **enterprise auth patterns** and **zero-trust data access**.
+
+<br>
 
 ---
 
-## Project Overview
+<br>
+
+## 📋 Project Overview
 
 **JobTracker** is a clean, professional job application management system built for candidates who need a single source of truth across companies, roles, statuses, and timelines. Engineered with a muted Zinc/Slate design system, dark-mode parity, and a dashboard-first UX that prioritizes speed, clarity, and recruiter-ready polish.
 
 The application delivers authenticated CRUD workflows, real-time client-side discovery, and server-authoritative mutations—deployed as a serverless edge application with managed PostgreSQL and transactional email infrastructure.
 
+<br>
+
 ---
 
-## Tech Stack
+<br>
 
-| Layer | Technology |
+## 🛠️ Tech Stack
+
+| **Layer** | **Technology** |
 | :--- | :--- |
 | **Framework** | Next.js 16 · App Router · React 19 |
 | **Language** | TypeScript (strict) |
@@ -33,43 +49,63 @@ The application delivers authenticated CRUD workflows, real-time client-side dis
 | **Deployment** | Vercel · Git-based CI/CD |
 | **Utilities** | `date-fns` · Server Actions · Edge Middleware |
 
+<br>
+
 ---
 
-## Key Engineering Highlights
+<br>
 
-### Secure Data Architecture
+## ⚙️ Key Engineering Highlights
+
+<br>
+
+### 🔒 Secure Data Architecture
 
 - **PostgreSQL schema design** with typed columns, foreign-key cascades, and **rigid `CHECK` constraints** on enumerated job statuses (`Applied`, `Interviewing`, `Offer`, `Rejected`) to enforce data integrity at the database layer.
 - **Row Level Security (RLS)** policies scoped to `auth.uid()` — users can only `SELECT`, `INSERT`, `UPDATE`, and `DELETE` their own rows; zero trust-by-default, no service-role bypass in the client.
 - **Server-side validation** mirrors DB constraints before mutations to fail fast with actionable errors.
 
-### Advanced Session Lifecycle Management
+<br>
+
+### 🔑 Advanced Session Lifecycle Management
 
 - **Custom Edge Middleware** (`lib/supabase/middleware.ts`) refreshes Supabase sessions on every matched request via `auth.getUser()`.
 - **`applyCookies` pattern** copies refreshed SSR session cookies onto `NextResponse.redirect()` objects — eliminating auth cookie loss and **redirect loops** on protected routes (`/dashboard`) in production (Vercel).
 - **Server Action session hydration** — `getUser()` invoked post-`signIn` / `signUp` before `redirect()` to guarantee cookie persistence across the App Router boundary.
 
-### Modern Mutation Paradigms
+<br>
+
+### ⚡ Modern Mutation Paradigms
 
 - **Next.js Server Actions** (`"use server"`) for all CRUD — no REST API surface area, reduced attack vectors, colocated with route segments.
 - **React `useTransition`** in client components for non-blocking UI during `createJob`, `updateJob`, and `deleteJob` — optimistic UX with `router.refresh()` for SSR cache coherence via `revalidatePath`.
 - **Auth mutations** (`login`, `signup`, `logout`) as form-backed Server Actions with encoded error/success query-state routing.
 
-### Optimized Data Performance
+<br>
+
+### 📊 Optimized Data Performance
 
 - **`useMemo`-driven derived state** for O(n) filtering across company name and job title, status/experience facet filters, and **multi-attribute date sorting** (`date-fns` `compareAsc` / `compareDesc`).
 - **Zero network round-trips** for search/filter toggles — compute runs entirely on hydrated client state synced from Server Component `initialJobs`.
 - **Skeleton loading** (`loading.tsx`) and sticky table headers for perceived performance on large datasets.
 
-### Production Deployment
+<br>
+
+### 🚀 Production Deployment
 
 - **Vercel CI/CD** — push-to-deploy pipeline with environment-scoped secrets (`NEXT_PUBLIC_SUPABASE_*`, `NEXT_PUBLIC_SITE_URL`).
 - **Custom SMTP via Resend** integrated with Supabase Auth for reliable signup/login transactional email delivery on production domains.
 - **Auth callback route** (`/auth/callback`) with `exchangeCodeForSession` and safe `next` param sanitization for OAuth/email-link flows.
 
+<br>
+
 ---
 
-## Architecture at a Glance
+<br>
+
+## 🏗️ Architecture at a Glance
+
+<br>
 
 ```
 ┌─────────────┐     ┌──────────────────┐     ┌─────────────────┐
@@ -83,21 +119,33 @@ The application delivers authenticated CRUD workflows, real-time client-side dis
                     └──────────────────┘
 ```
 
+<br>
+
 ---
 
-## Core Features
+<br>
 
-| Feature | Implementation |
+## ✨ Core Features
+
+| **Feature** | **Implementation** |
 | :--- | :--- |
-| Authentication | Email/password · protected routes · session refresh middleware |
-| Job CRUD | Server Actions · modal forms · inline delete confirmation |
-| Discovery | Full-text search · status filter · experience filter · date sort |
-| Theming | System/light/dark via `next-themes` |
-| Responsive UI | Mobile-first table · glass-panel design system |
+| 🔐 **Authentication** | Email/password · protected routes · session refresh middleware |
+| 📝 **Job CRUD** | Server Actions · modal forms · inline delete confirmation |
+| 🔍 **Discovery** | Full-text search · status filter · experience filter · date sort |
+| 🌗 **Theming** | System/light/dark via `next-themes` |
+| 📱 **Responsive UI** | Mobile-first table · glass-panel design system |
+
+<br>
 
 ---
 
-## Quick Start
+<br>
+
+## ▶️ Quick Start
+
+<br>
+
+**Local development**
 
 ```bash
 # Install dependencies
@@ -112,14 +160,24 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 npm run dev
 ```
 
+<br>
+
+**Production build**
+
 ```bash
 # Production build
 npm run build && npm start
 ```
 
+<br>
+
 ---
 
-## Project Structure
+<br>
+
+## 📁 Project Structure
+
+<br>
 
 ```
 app/
@@ -135,14 +193,22 @@ lib/
 middleware.ts        # session refresh + route guards
 ```
 
+<br>
+
 ---
 
-## Keywords
+<br>
+
+## 🏷️ Keywords
 
 `Next.js App Router` · `TypeScript` · `Supabase RLS` · `PostgreSQL CHECK constraints` · `Server Actions` · `SSR Cookies` · `Edge Middleware` · `useMemo` · `useTransition` · `Vercel` · `Resend SMTP` · `Full-Stack` · `SaaS` · `Auth` · `CRUD`
 
+<br>
+
 ---
 
-## License
+<br>
+
+## ©️ License
 
 Private portfolio project. All rights reserved By Muhammad Haris Bin Nawaz.
