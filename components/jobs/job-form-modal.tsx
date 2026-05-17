@@ -268,14 +268,14 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
                 variant="secondary"
                 onClick={onClose}
                 disabled={isPending}
-                className="flex-1 h-11 bg-white/5 hover:bg-white/10 text-white border-transparent transition-all"
+                className="flex-1 h-11 px-2 sm:px-4 text-sm sm:text-base whitespace-nowrap bg-white/5 hover:bg-white/10 text-white border-transparent transition-all"
               >
                 Cancel
               </Button>
               <button
                 type="submit"
                 disabled={isPending}
-                className="flex-1 h-11 bg-violet-600 hover:bg-violet-500 text-white font-medium tracking-wide shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_25px_rgba(139,92,246,0.4)] transition-all border border-violet-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 h-11 px-2 sm:px-4 text-sm sm:text-base truncate bg-violet-600 hover:bg-violet-500 text-white font-medium tracking-wide shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_25px_rgba(139,92,246,0.4)] transition-all border border-violet-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isPending ? "Saving..." : job ? "Save changes" : "Save application"}
               </button>

@@ -106,11 +106,7 @@ export async function signup(formData: FormData) {
     redirect(`/signup?error=${encodeURIComponent(error.message)}`);
   }
 
-  await supabase.auth.signOut();
-
-  redirect(
-    "/login?message=Account+created+successfully.+Please+sign+in."
-  );
+  redirect("/dashboard");
 }
 
 export async function logout() {
