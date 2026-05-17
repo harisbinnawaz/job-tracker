@@ -172,8 +172,8 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
       </div>
 
       {/* Metrics */}
-      <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-        <div className="glass-panel rounded-xl border-white/10 bg-gradient-to-br from-white/10 to-white/[0.03] p-4 lg:col-span-1">
+      <div className="scrollbar-none mb-6 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-smooth pb-1 pr-4 lg:grid lg:grid-cols-6 lg:overflow-visible lg:pr-0">
+        <div className="glass-panel w-[min(78vw,16rem)] flex-none snap-start rounded-xl border-white/10 bg-gradient-to-br from-white/10 to-white/[0.03] p-4 lg:col-span-1 lg:w-auto">
           <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">
             Total
           </p>
@@ -184,7 +184,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
         {statusMetrics.map(({ status, count }) => (
           <div
             key={status}
-            className={`rounded-xl border bg-gradient-to-br p-4 shadow-[0_18px_45px_-28px_rgba(0,0,0,0.85)] ${metricStyles[status]}`}
+            className={`w-[min(78vw,16rem)] flex-none snap-start rounded-xl border bg-gradient-to-br p-4 shadow-[0_18px_45px_-28px_rgba(0,0,0,0.85)] last:mr-4 lg:w-auto lg:last:mr-0 ${metricStyles[status]}`}
           >
             <p className="text-xs font-semibold uppercase tracking-widest text-current/70">
               {status}

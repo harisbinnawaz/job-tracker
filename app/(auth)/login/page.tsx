@@ -1,9 +1,6 @@
 import Link from "next/link";
-import { login } from "../actions";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { BriefcaseBusiness, ArrowRight } from "lucide-react";
+import { BriefcaseBusiness } from "lucide-react";
+import { LoginForm } from "./form";
 
 export const dynamic = "force-dynamic";
 
@@ -43,43 +40,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </div>
         )}
 
-        <form action={login} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-zinc-300">
-              Email Address
-            </Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="you@example.com"
-              required
-              autoComplete="email"
-              className="h-11 border-white/10 bg-black/50 transition-all focus:border-violet-500/50 focus:ring-violet-500/20"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password" className="text-zinc-300">
-              Password
-            </Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="••••••••"
-              required
-              autoComplete="current-password"
-              className="h-11 border-white/10 bg-black/50 transition-all focus:border-violet-500/50 focus:ring-violet-500/20"
-            />
-          </div>
-          <Button
-            type="submit"
-            className="group mt-4 h-11 w-full bg-zinc-100 font-medium tracking-wide text-zinc-900 shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all duration-300 hover:bg-white hover:shadow-[0_0_25px_rgba(255,255,255,0.2)]"
-          >
-            Sign in
-            <ArrowRight className="ml-2 h-4 w-4 opacity-70 transition-transform group-hover:translate-x-1" />
-          </Button>
-        </form>
+        <LoginForm />
       </div>
 
       <p className="mt-5 w-full text-center text-sm text-zinc-400">

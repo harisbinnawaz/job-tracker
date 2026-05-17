@@ -29,9 +29,6 @@ export async function login(formData: FormData) {
     redirect(`/login?error=${encodeURIComponent(error.message)}`);
   }
 
-  await supabase.auth.getUser();
-
-  revalidatePath("/", "layout");
   redirect("/dashboard");
 }
 
