@@ -77,42 +77,13 @@ export async function login(formData: FormData) {
 
   const email = ((formData.get("email") as string) || "").trim();
   const password = formData.get("password") as string;
-  const userExists = await authUserExists(supabase, email);
-
-  if (userExists === false) {
-    redirect(`/login?error=${encodeURIComponent("User doesn't exist")}`);
-  }
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    const normalizedMessage = error.message.toLowerCase();
-    const userNotFound =
-      normalizedMessage.includes("user not found") ||
-      normalizedMessage.includes("user doesn't exist") ||
-      normalizedMessage.includes("user does not exist");
-
-    if (userNotFound) {
-      redirect(`/login?error=${encodeURIComponent("User doesn't exist")}`);
-    }
-
-    const invalidPassword =
-      normalizedMessage.includes("invalid login credentials") ||
-      (error as { code?: string }).code === "invalid_credentials";
-
-    if (invalidPassword) {
-      const confirmedUserExists = userExists ?? (await authUserExists(supabase, email));
-
-      if (confirmedUserExists === false) {
-        redirect(`/login?error=${encodeURIComponent("User doesn't exist")}`);
-      }
-
-      redirect(
-        `/login?error=${encodeURIComponent("Wrong password")}`
-      );
-    }
-
-    redirect(`/login?error=${encodeURIComponent(error.message)}`);
+    redirect(
+      `/login?error=${encodeURIComponent("Invalid credentials")}&email=${encodeURIComponent(email)}`
+    );
   }
 
   redirect("/dashboard");
