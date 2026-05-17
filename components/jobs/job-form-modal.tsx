@@ -43,7 +43,9 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
   const [jobLink, setJobLink] = useState("");
   const [notes, setNotes] = useState("");
 
-  const todayDate = new Date().toISOString().split("T")[0];
+  // Use local time for date calculation instead of UTC to avoid timezone boundary issues
+  const today = new Date();
+  const todayDate = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().split("T")[0];
 
   // Reset form state when modal opens or job changes
   useEffect(() => {
@@ -71,7 +73,7 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
       return;
     }
 
-    if (new Date(dateApplied) > new Date()) {
+    if (dateApplied > todayDate) {
       setError("Date applied cannot be in the future");
       setIsPending(false);
       return;
@@ -179,7 +181,7 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
                 value={experienceRequired}
                 onChange={(e) => setExperienceRequired(e.target.value)}
                 required
-                className="h-11 w-full rounded-lg border border-white/10 bg-black/50 px-3 text-sm text-zinc-100 transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 outline-none"
+                className="appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23a3a3a3%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.25em_1.25em] bg-[position:right_0.75rem_center] bg-no-repeat pr-10 h-11 w-full rounded-lg border border-white/10 bg-black/50 pl-3 text-sm text-zinc-100 transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 outline-none"
               >
                 <option value="Fresh">Fresh</option>
                 <option value="0-6 months">0-6 months</option>
@@ -198,8 +200,15 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
                 value={dateApplied}
                 max={todayDate}
                 onChange={(e) => setDateApplied(e.target.value)}
+                onClick={(e) => {
+                  try {
+                    if ("showPicker" in HTMLInputElement.prototype) {
+                      e.currentTarget.showPicker();
+                    }
+                  } catch (err) {}
+                }}
                 required
-                className="bg-black/50 border-white/10 focus:border-violet-500/50 focus:ring-violet-500/20 h-11 transition-all"
+                className="relative w-full cursor-pointer bg-black/50 border-white/10 focus:border-violet-500/50 focus:ring-violet-500/20 h-11 transition-all pr-3 pl-3 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-3 [&::-webkit-calendar-picker-indicator]:w-5 [&::-webkit-calendar-picker-indicator]:h-5 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100"
               />
             </div>
 
@@ -212,7 +221,7 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
                   setStatus(normalizeJobStatus(e.target.value))
                 }
                 required
-                className="h-11 w-full rounded-lg border border-white/10 bg-black/50 px-3 text-sm text-zinc-100 transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 outline-none"
+                className="appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23a3a3a3%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.25em_1.25em] bg-[position:right_0.75rem_center] bg-no-repeat pr-10 h-11 w-full rounded-lg border border-white/10 bg-black/50 pl-3 text-sm text-zinc-100 transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 outline-none"
               >
                 {JOB_STATUSES.map((value) => (
                   <option key={value} value={value}>

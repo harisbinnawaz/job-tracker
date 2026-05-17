@@ -39,7 +39,7 @@ export async function getJobs() {
       console.error("Error fetching jobs:", error);
       return [];
     }
-    return data ?? [];
+    return JSON.parse(JSON.stringify(data ?? [])) as Job[];
   } catch (error) {
     console.error("Error in getJobs:", error);
     return [];
@@ -72,7 +72,7 @@ export async function createJob(payload: JobInsert) {
       throw new Error(error.message);
     }
     revalidatePath("/dashboard");
-    return data as Job;
+    return JSON.parse(JSON.stringify(data)) as Job;
   } catch (error) {
     console.error("Error in createJob:", error);
     throw error;
@@ -103,7 +103,7 @@ export async function updateJob(id: string, payload: JobUpdate) {
       throw new Error(error.message);
     }
     revalidatePath("/dashboard");
-    return data as Job;
+    return JSON.parse(JSON.stringify(data)) as Job;
   } catch (error) {
     console.error("Error in updateJob:", error);
     throw error;
