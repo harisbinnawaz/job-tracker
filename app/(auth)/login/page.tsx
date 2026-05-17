@@ -40,7 +40,10 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </div>
         )}
 
-        <LoginForm email={email ? decodeURIComponent(email) : undefined} />
+        <LoginForm
+          key={`${error}-${email}`}
+          email={email ? decodeURIComponent(email) : undefined}
+        />
       </div>
 
       <p className="mt-5 w-full text-center text-sm text-zinc-400">
