@@ -10,11 +10,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Pencil, Trash2, ExternalLink, Search, ArrowUpDown, Inbox } from "lucide-react";
 import { format, parseISO } from "date-fns";
-import type { Job, JobStatus } from "@/lib/types";
+import { JOB_STATUSES, type Job, type JobStatus } from "@/lib/types";
 
 interface JobsTableProps {
   initialJobs: Job[];
 }
+
+const metricStyles: Record<JobStatus, string> = {
+  Applied: "from-blue-500/15 to-blue-500/5 text-blue-200 border-blue-400/20",
+  Interviewing: "from-amber-500/15 to-amber-500/5 text-amber-200 border-amber-400/20",
+  Interviewed: "from-cyan-500/15 to-cyan-500/5 text-cyan-200 border-cyan-400/20",
+  Offer: "from-emerald-500/15 to-emerald-500/5 text-emerald-200 border-emerald-400/20",
+  Rejected: "from-zinc-500/15 to-zinc-500/5 text-zinc-200 border-zinc-400/20",
+};
 
 export function JobsTable({ initialJobs }: JobsTableProps) {
   const router = useRouter();
@@ -63,6 +71,15 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
 
     return result;
   }, [jobs, searchQuery, statusFilter, experienceFilter, sortOrder]);
+
+  const statusMetrics = useMemo(
+    () =>
+      JOB_STATUSES.map((status) => ({
+        status,
+        count: jobs.filter((job) => job.status === status).length,
+      })),
+    [jobs]
+  );
 
   const handleDeleteClick = (id: string) => {
     setDeletingId(id);
@@ -144,6 +161,36 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
         </Button>
       </div>
 
+      {/* Metrics */}
+      <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+        <div className="glass-panel rounded-xl border-white/10 bg-gradient-to-br from-white/10 to-white/[0.03] p-4 lg:col-span-1">
+          <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">
+            Total
+          </p>
+          <p className="mt-2 text-3xl font-bold tracking-tight text-white">
+            {jobs.length}
+          </p>
+        </div>
+        {statusMetrics.map(({ status, count }) => (
+          <div
+            key={status}
+            className={`rounded-xl border bg-gradient-to-br p-4 shadow-[0_18px_45px_-28px_rgba(0,0,0,0.85)] ${metricStyles[status]}`}
+          >
+            <p className="text-xs font-semibold uppercase tracking-widest text-current/70">
+              {status}
+            </p>
+            <div className="mt-2 flex items-end justify-between gap-3">
+              <p className="text-3xl font-bold tracking-tight text-white">
+                {count}
+              </p>
+              <span className="pb-1 text-xs font-medium text-zinc-500">
+                {jobs.length > 0 ? Math.round((count / jobs.length) * 100) : 0}%
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* Filter Bar */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row glass-panel p-2 rounded-xl">
         <div className="relative flex-1 min-w-48">
@@ -174,10 +221,11 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
           className="h-10 rounded-lg border border-transparent bg-black/40 px-3 text-sm text-zinc-200 transition-all focus:border-violet-500/50 outline-none"
         >
           <option value="All">All statuses</option>
-          <option value="Applied">Applied</option>
-          <option value="Interviewing">Interviewing</option>
-          <option value="Offer">Offer</option>
-          <option value="Rejected">Rejected</option>
+          {JOB_STATUSES.map((status) => (
+            <option key={status} value={status}>
+              {status}
+            </option>
+          ))}
         </select>
         <Button
           variant="secondary"
@@ -301,13 +349,14 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                         </Button>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center justify-end gap-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
                         <Button
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-white/10"
                           onClick={() => setEditingJob(job)}
                           title="Edit"
+                          aria-label={`Edit ${job.company_name} application`}
                         >
                           <Pencil className="h-3.5 w-3.5" />
                         </Button>
@@ -317,6 +366,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                           onClick={() => handleDeleteClick(job.id)}
                           className="h-8 w-8 text-zinc-400 hover:text-red-400 hover:bg-red-500/10"
                           title="Delete"
+                          aria-label={`Delete ${job.company_name} application`}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>

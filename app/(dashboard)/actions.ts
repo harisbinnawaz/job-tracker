@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import {
+  JOB_STATUSES,
   isJobStatus,
   type JobInsert,
   type JobStatus,
@@ -13,7 +14,7 @@ import {
 function assertValidJobPayload(payload: JobInsert | JobUpdate) {
   if (payload.status !== undefined && !isJobStatus(payload.status)) {
     throw new Error(
-      `Invalid status "${payload.status}". Must be one of: Applied, Interviewing, Offer, Rejected.`
+      `Invalid status "${payload.status}". Must be one of: ${JOB_STATUSES.join(", ")}.`
     );
   }
 }
