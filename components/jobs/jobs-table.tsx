@@ -320,7 +320,20 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                     {job.experience_required}
                   </td>
                   <td className="px-5 py-4 text-sm text-zinc-400">
-                    {format(parseISO(job.date_applied), "MMM d, yyyy")}
+                    {job.date_applied ? (
+                      <span suppressHydrationWarning>
+                        {(() => {
+                          try {
+                            const parsed = parseISO(job.date_applied);
+                            return isNaN(parsed.getTime()) ? "Invalid Date" : format(parsed, "MMM d, yyyy");
+                          } catch (e) {
+                            return "Invalid Date";
+                          }
+                        })()}
+                      </span>
+                    ) : (
+                      "N/A"
+                    )}
                   </td>
                   <td className="px-5 py-4 text-sm">
                     <StatusBadge status={job.status} />
