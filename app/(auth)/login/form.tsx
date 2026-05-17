@@ -3,6 +3,7 @@
 import { useFormStatus } from "react-dom";
 import { login } from "../actions";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/auth/password-input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, LoaderCircle } from "lucide-react";
@@ -27,7 +28,11 @@ function SubmitButton() {
   );
 }
 
-export function LoginForm() {
+interface LoginFormProps {
+  email?: string;
+}
+
+export function LoginForm({ email }: LoginFormProps) {
   return (
     <form action={login} className="space-y-4">
       <div className="space-y-2">
@@ -41,6 +46,7 @@ export function LoginForm() {
           placeholder="you@example.com"
           required
           autoComplete="email"
+          defaultValue={email}
           className="h-11 border-white/10 bg-black/50 transition-all focus:border-violet-500/50 focus:ring-violet-500/20"
         />
       </div>
@@ -48,10 +54,9 @@ export function LoginForm() {
         <Label htmlFor="password" className="text-zinc-300">
           Password
         </Label>
-        <Input
+        <PasswordInput
           id="password"
           name="password"
-          type="password"
           placeholder="Password"
           required
           autoComplete="current-password"

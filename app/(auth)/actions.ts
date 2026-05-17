@@ -20,12 +20,32 @@ function validatePassword(password: string): string | null {
 export async function login(formData: FormData) {
   const supabase = await createClient();
 
-  const email = formData.get("email") as string;
+  const email = ((formData.get("email") as string) || "").trim();
   const password = formData.get("password") as string;
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
+    const normalizedMessage = error.message.toLowerCase();
+    const userNotFound =
+      normalizedMessage.includes("user not found") ||
+      normalizedMessage.includes("user doesn't exist") ||
+      normalizedMessage.includes("user does not exist");
+
+    if (userNotFound) {
+      redirect(`/login?error=${encodeURIComponent("User doesn't exist")}`);
+    }
+
+    const invalidPassword = normalizedMessage.includes(
+      "invalid login credentials"
+    );
+
+    if (invalidPassword) {
+      redirect(
+        `/login?error=${encodeURIComponent("Wrong Password")}&email=${encodeURIComponent(email)}`
+      );
+    }
+
     redirect(`/login?error=${encodeURIComponent(error.message)}`);
   }
 

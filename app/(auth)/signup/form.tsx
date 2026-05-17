@@ -2,6 +2,7 @@
 
 import { signup } from "../actions";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/auth/password-input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
@@ -52,14 +53,12 @@ export function SignupForm() {
       return;
     }
 
-    // Client-side password validation
     const validationError = validatePassword(password);
     if (validationError) {
       setPasswordError(true);
       return;
     }
 
-    // Remove confirm-password before sending to server action
     formData.delete("confirm-password");
 
     startTransition(async () => {
@@ -86,7 +85,9 @@ export function SignupForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="email" className="text-zinc-300">Email Address</Label>
+          <Label htmlFor="email" className="text-zinc-300">
+            Email Address
+          </Label>
           <Input
             id="email"
             name="email"
@@ -94,39 +95,47 @@ export function SignupForm() {
             placeholder="you@example.com"
             required
             autoComplete="email"
-            className="bg-black/50 border-white/10 focus:border-fuchsia-500/50 focus:ring-fuchsia-500/20 h-11 transition-all"
+            className="h-11 border-white/10 bg-black/50 transition-all focus:border-fuchsia-500/50 focus:ring-fuchsia-500/20"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-zinc-300">Password</Label>
-          <Input
+          <Label htmlFor="password" className="text-zinc-300">
+            Password
+          </Label>
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
-            placeholder="••••••••"
+            placeholder="Password"
             required
             autoComplete="new-password"
-            className="bg-black/50 border-white/10 focus:border-fuchsia-500/50 focus:ring-fuchsia-500/20 h-11 transition-all"
+            className="h-11 border-white/10 bg-black/50 transition-all focus:border-fuchsia-500/50 focus:ring-fuchsia-500/20"
           />
+          <p className="text-xs leading-5 text-zinc-500">
+            Use at least 8 characters with letters and numbers.
+          </p>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="confirm-password" className="text-zinc-300">Confirm Password</Label>
-          <Input
+          <Label htmlFor="confirm-password" className="text-zinc-300">
+            Confirm Password
+          </Label>
+          <PasswordInput
             id="confirm-password"
             name="confirm-password"
-            type="password"
-            placeholder="••••••••"
+            placeholder="Password"
             required
-            className="bg-black/50 border-white/10 focus:border-fuchsia-500/50 focus:ring-fuchsia-500/20 h-11 transition-all"
+            autoComplete="new-password"
+            className="h-11 border-white/10 bg-black/50 transition-all focus:border-fuchsia-500/50 focus:ring-fuchsia-500/20"
           />
         </div>
-        <Button 
-          type="submit" 
-          className="mt-4 w-full h-11 bg-zinc-100 hover:bg-white text-zinc-900 font-medium tracking-wide transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] group" 
+        <Button
+          type="submit"
+          className="group mt-4 h-11 w-full bg-zinc-100 font-medium tracking-wide text-zinc-900 shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all duration-300 hover:bg-white hover:shadow-[0_0_25px_rgba(255,255,255,0.2)]"
           disabled={isPending}
         >
           {isPending ? "Creating account..." : "Create account"}
-          {!isPending && <ArrowRight className="ml-2 h-4 w-4 opacity-70 group-hover:translate-x-1 transition-transform" />}
+          {!isPending && (
+            <ArrowRight className="ml-2 h-4 w-4 opacity-70 transition-transform group-hover:translate-x-1" />
+          )}
         </Button>
       </form>
     </>

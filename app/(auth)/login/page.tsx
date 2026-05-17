@@ -5,11 +5,11 @@ import { LoginForm } from "./form";
 export const dynamic = "force-dynamic";
 
 interface LoginPageProps {
-  searchParams: Promise<{ error?: string; message?: string }>;
+  searchParams: Promise<{ error?: string; message?: string; email?: string }>;
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const { error, message } = await searchParams;
+  const { error, message, email } = await searchParams;
 
   return (
     <div className="mx-auto flex w-full max-w-sm flex-col items-stretch">
@@ -40,7 +40,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </div>
         )}
 
-        <LoginForm />
+        <LoginForm email={email ? decodeURIComponent(email) : undefined} />
       </div>
 
       <p className="mt-5 w-full text-center text-sm text-zinc-400">
