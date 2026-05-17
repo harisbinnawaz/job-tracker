@@ -101,14 +101,14 @@ export async function login(formData: FormData) {
       (error as { code?: string }).code === "invalid_credentials";
 
     if (invalidPassword) {
-      const userExists = await authUserExists(supabase, email);
+      const confirmedUserExists = userExists ?? (await authUserExists(supabase, email));
 
-      if (userExists === false) {
+      if (confirmedUserExists === false) {
         redirect(`/login?error=${encodeURIComponent("User doesn't exist")}`);
       }
 
       redirect(
-        `/login?error=${encodeURIComponent("Wrong Password")}&email=${encodeURIComponent(email)}`
+        `/login?error=${encodeURIComponent("Wrong password")}&email=${encodeURIComponent(email)}`
       );
     }
 
