@@ -108,6 +108,15 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
     router.refresh();
   };
 
+  const handleJobSaved = (savedJob: Job) => {
+    setJobs((prev) => {
+      const exists = prev.some((job) => job.id === savedJob.id);
+      return exists
+        ? prev.map((job) => (job.id === savedJob.id ? savedJob : job))
+        : [savedJob, ...prev];
+    });
+  };
+
   if (jobs.length === 0) {
     return (
       <>
@@ -133,6 +142,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
         <JobFormModal
           open={isAddModalOpen}
           onClose={handleAddClose}
+          onSaved={handleJobSaved}
         />
       </>
     );
@@ -349,7 +359,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                         </Button>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-end gap-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
+                      <div className="flex items-center justify-end gap-1">
                         <Button
                           variant="ghost"
                           size="icon"
@@ -364,7 +374,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                           variant="ghost"
                           size="icon"
                           onClick={() => handleDeleteClick(job.id)}
-                          className="h-8 w-8 text-zinc-400 hover:text-red-400 hover:bg-red-500/10"
+                          className="h-8 w-8 border border-red-500/20 bg-red-500/10 text-red-300 hover:bg-red-500/15 hover:text-red-200"
                           title="Delete"
                           aria-label={`Delete ${job.company_name} application`}
                         >
@@ -384,12 +394,14 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
       <JobFormModal
         open={isAddModalOpen}
         onClose={handleAddClose}
+        onSaved={handleJobSaved}
       />
       {editingJob && (
         <JobFormModal
           job={editingJob}
           open={true}
           onClose={handleEditClose}
+          onSaved={handleJobSaved}
         />
       )}
     </>

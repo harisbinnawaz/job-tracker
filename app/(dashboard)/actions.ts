@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import {
   JOB_STATUSES,
   isJobStatus,
+  type Job,
   type JobInsert,
   type JobStatus,
   type JobUpdate,
@@ -26,7 +27,6 @@ export async function getJobs() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       redirect("/login");
-      return [];
     }
 
     const { data, error } = await supabase
@@ -55,22 +55,24 @@ export async function createJob(payload: JobInsert) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       redirect("/login");
-      return;
     }
 
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("jobs")
       .insert({
         ...payload,
         status: payload.status as JobStatus,
         user_id: user.id,
-      });
+      })
+      .select("*")
+      .single();
 
     if (error) {
       console.error("Error creating job:", error);
       throw new Error(error.message);
     }
     revalidatePath("/dashboard");
+    return data as Job;
   } catch (error) {
     console.error("Error in createJob:", error);
     throw error;
@@ -86,20 +88,22 @@ export async function updateJob(id: string, payload: JobUpdate) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       redirect("/login");
-      return;
     }
 
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("jobs")
       .update(payload)
       .eq("id", id)
-      .eq("user_id", user.id);
+      .eq("user_id", user.id)
+      .select("*")
+      .single();
 
     if (error) {
       console.error("Error updating job:", error);
       throw new Error(error.message);
     }
     revalidatePath("/dashboard");
+    return data as Job;
   } catch (error) {
     console.error("Error in updateJob:", error);
     throw error;
@@ -113,7 +117,6 @@ export async function deleteJob(id: string) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       redirect("/login");
-      return;
     }
 
     const { error } = await supabase

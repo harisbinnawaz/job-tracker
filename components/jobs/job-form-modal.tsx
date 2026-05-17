@@ -18,6 +18,7 @@ interface JobFormModalProps {
   job?: Job;
   open: boolean;
   onClose: () => void;
+  onSaved?: (job: Job) => void;
 }
 
 function isNextRedirectError(error: unknown): boolean {
@@ -30,7 +31,7 @@ function isNextRedirectError(error: unknown): boolean {
   );
 }
 
-export function JobFormModal({ job, open, onClose }: JobFormModalProps) {
+export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps) {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -89,11 +90,13 @@ export function JobFormModal({ job, open, onClose }: JobFormModalProps) {
     };
 
     try {
+      let savedJob: Job;
       if (job) {
-        await updateJob(job.id, payload);
+        savedJob = await updateJob(job.id, payload);
       } else {
-        await createJob(payload as JobInsert);
+        savedJob = await createJob(payload as JobInsert);
       }
+      onSaved?.(savedJob);
     } catch (err) {
       if (isNextRedirectError(err)) throw err;
       const message = err instanceof Error ? err.message : "An error occurred";
@@ -274,4 +277,3 @@ export function JobFormModal({ job, open, onClose }: JobFormModalProps) {
     </div>
   );
 }
-
