@@ -18,7 +18,18 @@ function validatePassword(password: string): string | null {
   return null;
 }
 
-async function authUserExists(email: string): Promise<boolean | null> {
+async function authUserExists(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  email: string
+): Promise<boolean | null> {
+  const { data, error } = await supabase.rpc("auth_email_exists", {
+    lookup_email: email,
+  });
+
+  if (!error && typeof data === "boolean") {
+    return data;
+  }
+
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
@@ -66,6 +77,11 @@ export async function login(formData: FormData) {
 
   const email = ((formData.get("email") as string) || "").trim();
   const password = formData.get("password") as string;
+  const userExists = await authUserExists(supabase, email);
+
+  if (userExists === false) {
+    redirect(`/login?error=${encodeURIComponent("User doesn't exist")}`);
+  }
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
@@ -85,7 +101,7 @@ export async function login(formData: FormData) {
       (error as { code?: string }).code === "invalid_credentials";
 
     if (invalidPassword) {
-      const userExists = await authUserExists(email);
+      const userExists = await authUserExists(supabase, email);
 
       if (userExists === false) {
         redirect(`/login?error=${encodeURIComponent("User doesn't exist")}`);
