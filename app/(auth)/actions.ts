@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 function validatePassword(password: string): string | null {
   if (password.length < 8) {
@@ -15,6 +16,49 @@ function validatePassword(password: string): string | null {
     return "Password must contain at least one number";
   }
   return null;
+}
+
+async function authUserExists(email: string): Promise<boolean | null> {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+  if (!serviceRoleKey || !supabaseUrl) {
+    return null;
+  }
+
+  const admin = createSupabaseClient(supabaseUrl, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+
+  const targetEmail = email.toLowerCase();
+  const perPage = 1000;
+  let page = 1;
+
+  while (true) {
+    const { data, error } = await admin.auth.admin.listUsers({
+      page,
+      perPage,
+    });
+
+    if (error) {
+      return null;
+    }
+
+    if (
+      data.users.some((user) => user.email?.toLowerCase() === targetEmail)
+    ) {
+      return true;
+    }
+
+    if (data.users.length < perPage) {
+      return false;
+    }
+
+    page += 1;
+  }
 }
 
 export async function login(formData: FormData) {
@@ -36,11 +80,17 @@ export async function login(formData: FormData) {
       redirect(`/login?error=${encodeURIComponent("User doesn't exist")}`);
     }
 
-    const invalidPassword = normalizedMessage.includes(
-      "invalid login credentials"
-    );
+    const invalidPassword =
+      normalizedMessage.includes("invalid login credentials") ||
+      (error as { code?: string }).code === "invalid_credentials";
 
     if (invalidPassword) {
+      const userExists = await authUserExists(email);
+
+      if (userExists === false) {
+        redirect(`/login?error=${encodeURIComponent("User doesn't exist")}`);
+      }
+
       redirect(
         `/login?error=${encodeURIComponent("Wrong Password")}&email=${encodeURIComponent(email)}`
       );
