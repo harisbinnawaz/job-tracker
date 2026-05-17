@@ -91,9 +91,28 @@
   will-change: opacity, transform;
 }
 
+@keyframes root-emergence {
+  0% {
+    opacity: 0;
+    transform: translateY(2rem) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card-emergence {
+  animation: root-emergence 800ms cubic-bezier(0.25, 1.25, 0.35, 1) both;
+  transform-origin: bottom center;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .organic-rise-in,
-  .organic-rise-row {
+  .organic-rise-row,
+  .card-emergence {
     animation-duration: 1ms;
     animation-iteration-count: 1;
     will-change: auto;

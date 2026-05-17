@@ -173,7 +173,10 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
 
       {/* Metrics */}
       <div className="scrollbar-none mb-6 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-smooth pb-1 pr-4 lg:grid lg:grid-cols-6 lg:overflow-visible lg:pr-0">
-        <div className="glass-panel w-[min(78vw,16rem)] flex-none snap-start rounded-xl border-white/10 bg-gradient-to-br from-white/10 to-white/[0.03] p-4 lg:col-span-1 lg:w-auto">
+        <div 
+          className="card-emergence glass-panel w-[min(78vw,16rem)] flex-none snap-start rounded-xl border-white/10 bg-gradient-to-br from-white/10 to-white/[0.03] p-4 lg:col-span-1 lg:w-auto"
+          style={{ animationDelay: '0ms' }}
+        >
           <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">
             Total
           </p>
@@ -181,10 +184,11 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
             {jobs.length}
           </p>
         </div>
-        {statusMetrics.map(({ status, count }) => (
+        {statusMetrics.map(({ status, count }, index) => (
           <div
             key={status}
-            className={`w-[min(78vw,16rem)] flex-none snap-start rounded-xl border bg-gradient-to-br p-4 shadow-[0_18px_45px_-28px_rgba(0,0,0,0.85)] last:mr-4 lg:w-auto lg:last:mr-0 ${metricStyles[status]}`}
+            className={`card-emergence w-[min(78vw,16rem)] flex-none snap-start rounded-xl border bg-gradient-to-br p-4 shadow-[0_18px_45px_-28px_rgba(0,0,0,0.85)] last:mr-4 lg:w-auto lg:last:mr-0 ${metricStyles[status]}`}
+            style={{ animationDelay: `${(index + 1) * 75}ms` }}
           >
             <p className="text-xs font-semibold uppercase tracking-widest text-current/70">
               {status}
