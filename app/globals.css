@@ -24,6 +24,12 @@
     overflow-x: hidden;
   }
 
+  button,
+  [role="button"],
+  a {
+    cursor: pointer;
+  }
+
   /* Smooth focus rings — accessibility */
   :focus-visible {
     outline: none;
