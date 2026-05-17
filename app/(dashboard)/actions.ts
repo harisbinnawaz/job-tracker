@@ -41,6 +41,9 @@ export async function getJobs() {
     }
     return JSON.parse(JSON.stringify(data ?? [])) as Job[];
   } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error && typeof (error as any).digest === 'string' && (error as any).digest.startsWith('NEXT_REDIRECT')) {
+      throw error;
+    }
     console.error("Error in getJobs:", error);
     return [];
   }

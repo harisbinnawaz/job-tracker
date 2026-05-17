@@ -15,6 +15,9 @@ export default async function DashboardPage() {
 
     return <JobsTableShell initialJobs={jobs ?? []} />;
   } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error && typeof (error as any).digest === 'string' && (error as any).digest.startsWith('NEXT_REDIRECT')) {
+      throw error;
+    }
     console.error("Dashboard page error:", error);
     return <JobsTableShell initialJobs={[]} />;
   }
