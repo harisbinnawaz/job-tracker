@@ -21,7 +21,7 @@ function validatePassword(password: string): string | null {
 async function authUserExists(
   supabase: Awaited<ReturnType<typeof createClient>>,
   email: string
-): Promise<boolean> {
+): Promise<boolean | null> {
   const { data, error } = await supabase.rpc("auth_email_exists", {
     lookup_email: email,
   });
@@ -34,7 +34,7 @@ async function authUserExists(
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
   if (!serviceRoleKey || !supabaseUrl) {
-    return false;
+    return null;
   }
 
   const admin = createSupabaseClient(supabaseUrl, serviceRoleKey, {
@@ -55,7 +55,7 @@ async function authUserExists(
     });
 
     if (error) {
-      return false;
+      return null;
     }
 
     if (
@@ -79,7 +79,7 @@ export async function login(formData: FormData) {
   const password = formData.get("password") as string;
   const userExists = await authUserExists(supabase, email);
 
-  if (!userExists) {
+  if (userExists === false) {
     redirect(`/login?error=${encodeURIComponent("User doesn't exist")}`);
   }
 
@@ -101,6 +101,12 @@ export async function login(formData: FormData) {
       (error as { code?: string }).code === "invalid_credentials";
 
     if (invalidPassword) {
+      const userExists = await authUserExists(supabase, email);
+
+      if (userExists === false) {
+        redirect(`/login?error=${encodeURIComponent("User doesn't exist")}`);
+      }
+
       redirect(
         `/login?error=${encodeURIComponent("Wrong Password")}&email=${encodeURIComponent(email)}`
       );
