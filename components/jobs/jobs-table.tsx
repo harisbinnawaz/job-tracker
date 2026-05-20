@@ -17,11 +17,11 @@ interface JobsTableProps {
 }
 
 const metricStyles: Record<JobStatus, string> = {
-  Applied: "from-blue-500/15 to-blue-500/5 text-blue-200 border-blue-400/20",
-  Interviewing: "from-amber-500/15 to-amber-500/5 text-amber-200 border-amber-400/20",
-  Interviewed: "from-cyan-500/15 to-cyan-500/5 text-cyan-200 border-cyan-400/20",
-  Offer: "from-emerald-500/15 to-emerald-500/5 text-emerald-200 border-emerald-400/20",
-  Rejected: "from-zinc-500/15 to-zinc-500/5 text-zinc-200 border-zinc-400/20",
+  Applied: "status-card status-applied",
+  Interviewing: "status-card status-interviewing",
+  Interviewed: "status-card status-interviewed",
+  Offer: "status-card status-offer",
+  Rejected: "status-card status-rejected",
 };
 
 export function JobsTable({ initialJobs }: JobsTableProps) {
@@ -326,7 +326,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                           try {
                             const parsed = parseISO(job.date_applied);
                             return isNaN(parsed.getTime()) ? "Invalid Date" : format(parsed, "MMM d, yyyy");
-                          } catch (e) {
+                          } catch {
                             return "Invalid Date";
                           }
                         })()}

@@ -29,21 +29,18 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           "transition-colors duration-150 disabled:pointer-events-none disabled:opacity-50",
           // Variants
           variant === "primary" && [
-            "bg-zinc-100 text-zinc-900",
-            "hover:bg-zinc-200",
+            "theme-primary",
           ],
           variant === "secondary" && [
-            "border border-zinc-700",
-            "bg-zinc-900",
-            "text-zinc-300",
-            "hover:bg-zinc-800",
+            "border",
+            "theme-control",
           ],
           variant === "ghost" && [
-            "text-zinc-400",
-            "hover:bg-zinc-800",
+            "text-[var(--muted)]",
+            "hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)]",
           ],
           variant === "destructive" && [
-            "bg-red-600 text-white hover:bg-red-700",
+            "bg-[var(--danger)] text-white hover:brightness-110",
           ],
           // Sizes
           size === "sm" && "h-7 px-3 text-xs",

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isAppTheme, type AppTheme } from "@/lib/themes";
 import {
   JOB_STATUSES,
   isJobStatus,
@@ -18,6 +19,41 @@ function assertValidJobPayload(payload: JobInsert | JobUpdate) {
       `Invalid status "${payload.status}". Must be one of: ${JOB_STATUSES.join(", ")}.`
     );
   }
+}
+
+function isNextRedirectError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "digest" in error &&
+    typeof (error as { digest: unknown }).digest === "string" &&
+    (error as { digest: string }).digest.startsWith("NEXT_REDIRECT")
+  );
+}
+
+export async function saveThemePreference(theme: AppTheme) {
+  if (!isAppTheme(theme)) {
+    throw new Error("Invalid theme preference.");
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    data: { theme },
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath("/", "layout");
 }
 
 // --- READ ---
@@ -41,7 +77,7 @@ export async function getJobs() {
     }
     return JSON.parse(JSON.stringify(data ?? [])) as Job[];
   } catch (error) {
-    if (error && typeof error === 'object' && 'digest' in error && typeof (error as any).digest === 'string' && (error as any).digest.startsWith('NEXT_REDIRECT')) {
+    if (isNextRedirectError(error)) {
       throw error;
     }
     console.error("Error in getJobs:", error);

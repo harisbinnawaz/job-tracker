@@ -23,7 +23,7 @@ const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
           aria-label={visible ? "Hide password" : "Show password"}
           aria-pressed={visible}
           onClick={() => setVisible((value) => !value)}
-          className="absolute right-2 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-md text-zinc-500 transition-all duration-150 hover:bg-white/5 hover:text-zinc-200 active:scale-95"
+          className="absolute right-2 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-md text-[var(--muted)] transition-all duration-150 hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] active:scale-95"
         >
           <Icon className="size-4" aria-hidden="true" />
         </button>

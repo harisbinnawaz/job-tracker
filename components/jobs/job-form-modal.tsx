@@ -49,17 +49,27 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
 
   // Reset form state when modal opens or job changes
   useEffect(() => {
+    let cancelled = false;
+
     if (open) {
-      setCompany(job?.company_name || "");
-      setTitle(job?.job_title || "");
-      setExperienceRequired(job?.experience_required || "Fresh");
-      setDateApplied(job?.date_applied || "");
-      setStatus(normalizeJobStatus(job?.status));
-      setJobLink(job?.job_link || "");
-      setNotes(job?.notes || "");
-      setError(null);
-      setIsPending(false);
+      queueMicrotask(() => {
+        if (cancelled) return;
+
+        setCompany(job?.company_name || "");
+        setTitle(job?.job_title || "");
+        setExperienceRequired(job?.experience_required || "Fresh");
+        setDateApplied(job?.date_applied || "");
+        setStatus(normalizeJobStatus(job?.status));
+        setJobLink(job?.job_link || "");
+        setNotes(job?.notes || "");
+        setError(null);
+        setIsPending(false);
+      });
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, [open, job]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -205,7 +215,7 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
                     if ("showPicker" in HTMLInputElement.prototype) {
                       e.currentTarget.showPicker();
                     }
-                  } catch (err) {}
+                  } catch {}
                 }}
                 required
                 className="relative w-full cursor-pointer bg-black/50 border-white/10 focus:border-violet-500/50 focus:ring-violet-500/20 h-11 transition-all pr-3 pl-3 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-3 [&::-webkit-calendar-picker-indicator]:w-5 [&::-webkit-calendar-picker-indicator]:h-5 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100"
