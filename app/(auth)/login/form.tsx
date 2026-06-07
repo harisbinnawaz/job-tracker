@@ -16,7 +16,7 @@ function SubmitButton() {
       type="submit"
       disabled={pending}
       aria-busy={pending}
-      className="group mt-3 h-9 w-full font-medium tracking-wide transition-all duration-300 disabled:opacity-80"
+      className="group mt-2 h-9 w-full text-sm font-medium tracking-wide transition-all duration-300 disabled:opacity-80"
     >
       {pending ? "Signing in..." : "Sign in"}
       {pending ? (
@@ -34,9 +34,9 @@ interface LoginFormProps {
 
 export function LoginForm({ email }: LoginFormProps) {
   return (
-    <form action={login} className="space-y-2">
+    <form action={login} className="space-y-1.5">
       <div className="space-y-1">
-        <Label htmlFor="email" className="form-label">
+        <Label htmlFor="email" className="form-label text-xs">
           Email Address
         </Label>
         <Input
@@ -47,11 +47,11 @@ export function LoginForm({ email }: LoginFormProps) {
           required
           autoComplete="email"
           defaultValue={email}
-          className="h-10"
+          className="h-9 text-sm"
         />
       </div>
-      <div className="space-y-1.5">
-        <Label htmlFor="password" className="form-label">
+      <div className="space-y-1">
+        <Label htmlFor="password" className="form-label text-xs">
           Password
         </Label>
         <PasswordInput
@@ -60,7 +60,7 @@ export function LoginForm({ email }: LoginFormProps) {
           placeholder="Password"
           required
           autoComplete="current-password"
-          className="h-10"
+          className="h-9 text-sm"
         />
       </div>
       <SubmitButton />

@@ -83,9 +83,9 @@ export function SignupForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-2">
+      <form onSubmit={handleSubmit} className="space-y-1.5">
         <div className="space-y-1">
-          <Label htmlFor="email" className="form-label">
+          <Label htmlFor="email" className="form-label text-xs">
             Email Address
           </Label>
           <Input
@@ -95,11 +95,11 @@ export function SignupForm() {
             placeholder="you@example.com"
             required
             autoComplete="email"
-            className="h-10"
+            className="h-9 text-sm"
           />
         </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="password" className="form-label">
+        <div className="space-y-1">
+          <Label htmlFor="password" className="form-label text-xs">
             Password
           </Label>
           <PasswordInput
@@ -108,14 +108,14 @@ export function SignupForm() {
             placeholder="Password"
             required
             autoComplete="new-password"
-            className="h-10"
+            className="h-9 text-sm"
           />
-          <p className="form-helper text-xs leading-5">
+          <p className="form-helper text-[10px] leading-4 text-zinc-500">
             Use at least 8 characters with letters and numbers.
           </p>
         </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="confirm-password" className="form-label">
+        <div className="space-y-1">
+          <Label htmlFor="confirm-password" className="form-label text-xs">
             Confirm Password
           </Label>
           <PasswordInput
@@ -124,12 +124,12 @@ export function SignupForm() {
             placeholder="Password"
             required
             autoComplete="new-password"
-            className="h-10"
+            className="h-9 text-sm"
           />
         </div>
         <Button
           type="submit"
-          className="group mt-2 h-10 w-full font-medium tracking-wide transition-all duration-300"
+          className="group mt-2 h-9 w-full text-sm font-medium tracking-wide transition-all duration-300"
           disabled={isPending}
           aria-busy={isPending}
         >
