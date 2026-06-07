@@ -191,7 +191,7 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
                 value={experienceRequired}
                 onChange={(e) => setExperienceRequired(e.target.value)}
                 required
-                className="appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23a3a3a3%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.25em_1.25em] bg-[position:right_0.75rem_center] bg-no-repeat pr-10 h-11 w-full rounded-lg border border-white/10 bg-black/50 pl-3 text-sm text-zinc-100 transition-all focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/20 outline-none"
+                className="theme-select h-11 w-full rounded-lg border px-3 pr-10 text-sm transition-all outline-none"
               >
                 <option value="Fresh">Fresh</option>
                 <option value="0-6 months">0-6 months</option>
@@ -231,7 +231,7 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
                   setStatus(normalizeJobStatus(e.target.value))
                 }
                 required
-                className="appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23a3a3a3%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.25em_1.25em] bg-[position:right_0.75rem_center] bg-no-repeat pr-10 h-11 w-full rounded-lg border border-white/10 bg-black/50 pl-3 text-sm text-zinc-100 transition-all focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/20 outline-none"
+                className="theme-select h-11 w-full rounded-lg border px-3 pr-10 text-sm transition-all outline-none"
               >
                 {JOB_STATUSES.map((value) => (
                   <option key={value} value={value}>

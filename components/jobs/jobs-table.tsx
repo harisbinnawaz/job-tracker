@@ -219,7 +219,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
         <select
           value={experienceFilter}
           onChange={(e) => setExperienceFilter(e.target.value)}
-          className="h-10 rounded-lg border border-transparent bg-black/40 px-3 text-sm text-zinc-200 transition-all focus:border-violet-500/50 outline-none"
+          className="theme-select h-10 rounded-lg border px-3 pr-10 text-sm transition-all outline-none"
         >
           <option value="All">All Experiences</option>
           <option value="Fresh">Fresh</option>
@@ -232,7 +232,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as JobStatus | "All")}
-          className="h-10 rounded-lg border border-transparent bg-black/40 px-3 text-sm text-zinc-200 transition-all focus:border-violet-500/50 outline-none"
+          className="theme-select h-10 rounded-lg border px-3 pr-10 text-sm transition-all outline-none"
         >
           <option value="All">All statuses</option>
           {JOB_STATUSES.map((status) => (
