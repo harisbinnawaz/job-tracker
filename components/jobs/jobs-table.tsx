@@ -8,7 +8,20 @@ import { JobFormModal } from "./job-form-modal";
 import { StatusBadge } from "./status-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Pencil, Trash2, ExternalLink, Search, ArrowUpDown, Inbox } from "lucide-react";
+import {
+  ArrowUpDown,
+  BriefcaseBusiness,
+  Building2,
+  CalendarDays,
+  Clock,
+  ExternalLink,
+  FileText,
+  Inbox,
+  Pencil,
+  Search,
+  Trash2,
+  X,
+} from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { JOB_STATUSES, type Job, type JobStatus } from "@/lib/types";
 
@@ -24,6 +37,35 @@ const metricStyles: Record<JobStatus, string> = {
   Rejected: "status-card status-rejected",
 };
 
+const spacedCellClass =
+  "border-y border-[var(--border)] bg-[var(--surface)] px-5 py-5 align-top transition-all duration-200 ease-out group-hover:-translate-y-1 group-hover:bg-[var(--surface-strong)] group-hover:shadow-[0_20px_42px_-32px_var(--accent-glow)] group-focus-visible:-translate-y-1 group-focus-visible:bg-[var(--surface-strong)]";
+
+function formatJobDate(value: string | null | undefined) {
+  if (!value) {
+    return "N/A";
+  }
+
+  try {
+    const parsed = parseISO(value);
+    return isNaN(parsed.getTime()) ? "Invalid Date" : format(parsed, "MMM d, yyyy");
+  } catch {
+    return "Invalid Date";
+  }
+}
+
+function formatJobDateTime(value: string | null | undefined) {
+  if (!value) {
+    return "N/A";
+  }
+
+  try {
+    const parsed = parseISO(value);
+    return isNaN(parsed.getTime()) ? "Invalid Date" : format(parsed, "MMM d, yyyy, h:mm a");
+  } catch {
+    return "Invalid Date";
+  }
+}
+
 export function JobsTable({ initialJobs }: JobsTableProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -33,6 +75,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
   const [experienceFilter, setExperienceFilter] = useState<string | "All">("All");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [editingJob, setEditingJob] = useState<Job | null>(null);
+  const [viewingJob, setViewingJob] = useState<Job | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -115,6 +158,13 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
         ? prev.map((job) => (job.id === savedJob.id ? savedJob : job))
         : [savedJob, ...prev];
     });
+  };
+
+  const handleRowKeyDown = (event: React.KeyboardEvent<HTMLTableRowElement>, job: Job) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      setViewingJob(job);
+    }
   };
 
   if (jobs.length === 0) {
@@ -276,75 +326,94 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
           </Button>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl glass-panel">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto rounded-2xl glass-panel px-3 pb-3">
+          <table className="w-full min-w-[980px] border-separate border-spacing-y-3 text-left">
             <thead>
-              <tr className="border-b border-white/5 bg-black/40">
-                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
+              <tr>
+                <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
                   Company
                 </th>
-                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
-                  Role
+                <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
+                  Role & Notes
                 </th>
-                <th className="hidden px-5 py-4 text-xs font-semibold uppercase tracking-widest text-zinc-400 md:table-cell">
+                <th className="hidden px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400 md:table-cell">
                   Experience
                 </th>
-                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
+                <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
                   Date Applied
                 </th>
-                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
+                <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
                   Status
                 </th>
-                <th className="hidden px-5 py-4 text-xs font-semibold uppercase tracking-widest text-zinc-400 sm:table-cell">
+                <th className="hidden px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400 sm:table-cell">
                   Link
                 </th>
-                <th className="px-5 py-4 text-right text-xs font-semibold uppercase tracking-widest text-zinc-400">
+                <th className="px-5 pb-1 pt-4 text-right text-xs font-semibold uppercase tracking-widest text-zinc-400">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody>
               {filteredJobs.map((job, index) => (
                 <tr
                   key={job.id}
-                  className="organic-rise-row group transition-colors hover:bg-white/5"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setViewingJob(job)}
+                  onKeyDown={(event) => handleRowKeyDown(event, job)}
+                  aria-label={`View details for ${job.job_title} at ${job.company_name}`}
+                  className="organic-rise-row group cursor-pointer outline-none"
                   style={{ animationDelay: `${Math.min(index * 42, 260)}ms` }}
                 >
-                  <td className="px-5 py-4 text-sm font-medium text-white">
-                    {job.company_name}
+                  <td className={`${spacedCellClass} rounded-l-xl border-l`}>
+                    <div className="flex min-w-0 items-start gap-3">
+                      <div className="theme-accent-icon mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border">
+                        <Building2 className="h-4 w-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-white">
+                          {job.company_name}
+                        </p>
+                        <p className="mt-1 text-xs font-medium text-zinc-500">
+                          Application record
+                        </p>
+                      </div>
+                    </div>
                   </td>
-                  <td className="px-5 py-4 text-sm text-zinc-300">
-                    {job.job_title}
+                  <td className={spacedCellClass}>
+                    <div className="max-w-[26rem]">
+                      <p className="text-sm font-medium text-zinc-200">
+                        {job.job_title}
+                      </p>
+                      {job.notes ? (
+                        <p className="mt-2 max-h-10 overflow-hidden text-xs leading-5 text-zinc-500">
+                          {job.notes}
+                        </p>
+                      ) : (
+                        <p className="mt-2 text-xs leading-5 text-zinc-600">
+                          No notes attached
+                        </p>
+                      )}
+                    </div>
                   </td>
-                  <td className="hidden px-5 py-4 text-sm text-zinc-400 md:table-cell">
+                  <td className={`${spacedCellClass} hidden text-sm text-zinc-400 md:table-cell`}>
                     {job.experience_required}
                   </td>
-                  <td className="px-5 py-4 text-sm text-zinc-400">
-                    {job.date_applied ? (
-                      <span suppressHydrationWarning>
-                        {(() => {
-                          try {
-                            const parsed = parseISO(job.date_applied);
-                            return isNaN(parsed.getTime()) ? "Invalid Date" : format(parsed, "MMM d, yyyy");
-                          } catch {
-                            return "Invalid Date";
-                          }
-                        })()}
-                      </span>
-                    ) : (
-                      "N/A"
-                    )}
+                  <td className={`${spacedCellClass} text-sm text-zinc-400`}>
+                    <span suppressHydrationWarning>{formatJobDate(job.date_applied)}</span>
                   </td>
-                  <td className="px-5 py-4 text-sm">
+                  <td className={`${spacedCellClass} text-sm`}>
                     <StatusBadge status={job.status} />
                   </td>
-                  <td className="hidden px-5 py-4 text-sm sm:table-cell">
+                  <td className={`${spacedCellClass} hidden text-sm sm:table-cell`}>
                     {job.job_link ? (
                       <a
                         href={job.job_link}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={(event) => event.stopPropagation()}
                         className="inline-flex items-center justify-center p-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+                        aria-label={`Open job posting for ${job.company_name}`}
                       >
                         <ExternalLink className="h-4 w-4" />
                       </a>
@@ -352,7 +421,10 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                       <span className="text-zinc-600">—</span>
                     )}
                   </td>
-                  <td className="px-5 py-4 text-right">
+                  <td
+                    className={`${spacedCellClass} rounded-r-xl border-r text-right`}
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     {deletingId === job.id ? (
                       <div className="flex items-center justify-end gap-2">
                         <span className="text-xs text-zinc-400">Delete?</span>
@@ -421,6 +493,205 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
           onSaved={handleJobSaved}
         />
       )}
+      {viewingJob && (
+        <JobDetailsModal
+          job={viewingJob}
+          onClose={() => setViewingJob(null)}
+          onEdit={() => {
+            setViewingJob(null);
+            setEditingJob(viewingJob);
+          }}
+        />
+      )}
     </>
+  );
+}
+
+function DetailField({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-3">
+      <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">
+        {label}
+      </p>
+      <div className="mt-2 text-sm font-medium text-white">{value}</div>
+    </div>
+  );
+}
+
+function JobDetailsModal({
+  job,
+  onClose,
+  onEdit,
+}: {
+  job: Job;
+  onClose: () => void;
+  onEdit: () => void;
+}) {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
+  return (
+    <div
+      className="theme-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="glass-panel organic-rise-in relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/95 shadow-2xl shadow-black/60"
+        onClick={(event) => event.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="job-details-title"
+      >
+        <div className="theme-ambient-primary pointer-events-none absolute inset-0 rounded-full blur-[90px]" />
+
+        <div className="relative z-10 flex items-start justify-between gap-4 border-b border-white/10 bg-black/20 px-6 py-5">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="theme-accent-icon flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border">
+                <BriefcaseBusiness className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <h2
+                  id="job-details-title"
+                  className="truncate text-xl font-bold tracking-tight text-white"
+                >
+                  {job.job_title}
+                </h2>
+                <p className="mt-1 truncate text-sm font-medium text-zinc-400">
+                  {job.company_name}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="rounded-full p-2 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white"
+            aria-label="Close details"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="relative z-10 overflow-y-auto p-6">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <DetailField
+              label="Company"
+              value={
+                <span className="inline-flex min-w-0 items-center gap-2">
+                  <Building2 className="h-4 w-4 shrink-0 text-zinc-500" />
+                  <span className="truncate">{job.company_name}</span>
+                </span>
+              }
+            />
+            <DetailField
+              label="Experience"
+              value={job.experience_required || "N/A"}
+            />
+            <DetailField
+              label="Date Applied"
+              value={
+                <span className="inline-flex items-center gap-2" suppressHydrationWarning>
+                  <CalendarDays className="h-4 w-4 text-zinc-500" />
+                  {formatJobDate(job.date_applied)}
+                </span>
+              }
+            />
+            <DetailField label="Status" value={<StatusBadge status={job.status} />} />
+          </div>
+
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <DetailField
+              label="Job Link"
+              value={
+                job.job_link ? (
+                  <a
+                    href={job.job_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex max-w-full items-center gap-2 text-[var(--accent)] transition-colors hover:text-white"
+                  >
+                    <ExternalLink className="h-4 w-4 shrink-0" />
+                    <span className="truncate">{job.job_link}</span>
+                  </a>
+                ) : (
+                  "N/A"
+                )
+              }
+            />
+            <DetailField
+              label="Record ID"
+              value={<span className="break-all font-mono text-xs">{job.id}</span>}
+            />
+          </div>
+
+          <section className="mt-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-muted)] p-5">
+            <div className="mb-4 flex items-center gap-2">
+              <FileText className="h-4 w-4 text-zinc-500" />
+              <h3 className="text-sm font-semibold uppercase tracking-widest text-zinc-400">
+                Attached Notes
+              </h3>
+            </div>
+            <div className="max-h-[42vh] overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
+              <p className="whitespace-pre-wrap break-words text-sm leading-6 text-zinc-200">
+                {job.notes || "No notes attached to this application."}
+              </p>
+            </div>
+          </section>
+
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <DetailField
+              label="Created"
+              value={
+                <span className="inline-flex items-center gap-2" suppressHydrationWarning>
+                  <Clock className="h-4 w-4 text-zinc-500" />
+                  {formatJobDateTime(job.created_at)}
+                </span>
+              }
+            />
+            <DetailField
+              label="Last Updated"
+              value={
+                <span className="inline-flex items-center gap-2" suppressHydrationWarning>
+                  <Clock className="h-4 w-4 text-zinc-500" />
+                  {formatJobDateTime(job.updated_at)}
+                </span>
+              }
+            />
+          </div>
+        </div>
+
+        <div className="relative z-10 flex flex-col gap-3 border-t border-white/10 bg-black/20 px-6 py-4 sm:flex-row sm:justify-end">
+          <Button
+            variant="secondary"
+            onClick={onClose}
+            className="h-10 transition-all"
+          >
+            Close
+          </Button>
+          <Button
+            onClick={onEdit}
+            className="h-10 gap-2 transition-all"
+          >
+            <Pencil className="h-4 w-4" />
+            Edit application
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }
