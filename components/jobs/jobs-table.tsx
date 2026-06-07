@@ -38,7 +38,7 @@ const metricStyles: Record<JobStatus, string> = {
 };
 
 const spacedCellClass =
-  "border-y border-[var(--border)] bg-[var(--surface)] px-5 py-5 align-top transition-all duration-200 ease-out group-hover:-translate-y-1 group-hover:bg-[var(--surface-strong)] group-hover:shadow-[0_20px_42px_-32px_var(--accent-glow)] group-focus-visible:-translate-y-1 group-focus-visible:bg-[var(--surface-strong)]";
+  "border-y border-[var(--border)] bg-[var(--surface)] px-5 py-4 align-top transition-all duration-200 ease-out group-hover:scale-[1.012] group-hover:bg-[var(--surface-strong)] group-hover:shadow-[0_20px_42px_-32px_var(--accent-glow)] group-focus-visible:scale-[1.012] group-focus-visible:bg-[var(--surface-strong)]";
 
 function formatJobDate(value: string | null | undefined) {
   if (!value) {
@@ -374,9 +374,6 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                         <p className="truncate text-sm font-semibold text-white">
                           {job.company_name}
                         </p>
-                        <p className="mt-1 text-xs font-medium text-zinc-500">
-                          Application record
-                        </p>
                       </div>
                     </div>
                   </td>
@@ -614,7 +611,7 @@ function JobDetailsModal({
             <DetailField label="Status" value={<StatusBadge status={job.status} />} />
           </div>
 
-          <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <div className="mt-4 grid gap-4">
             <DetailField
               label="Job Link"
               value={
@@ -632,10 +629,6 @@ function JobDetailsModal({
                   "N/A"
                 )
               }
-            />
-            <DetailField
-              label="Record ID"
-              value={<span className="break-all font-mono text-xs">{job.id}</span>}
             />
           </div>
 
