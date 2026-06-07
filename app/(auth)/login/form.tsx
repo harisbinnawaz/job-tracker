@@ -16,7 +16,7 @@ function SubmitButton() {
       type="submit"
       disabled={pending}
       aria-busy={pending}
-      className="group mt-4 h-11 w-full bg-zinc-100 font-medium tracking-wide text-zinc-900 shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all duration-300 hover:bg-white hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] disabled:opacity-80"
+      className="group mt-4 h-11 w-full font-medium tracking-wide transition-all duration-300 disabled:opacity-80"
     >
       {pending ? "Signing in" : "Sign in"}
       {pending ? (
@@ -36,7 +36,7 @@ export function LoginForm({ email }: LoginFormProps) {
   return (
     <form action={login} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-zinc-300">
+        <Label htmlFor="email" className="form-label">
           Email Address
         </Label>
         <Input
@@ -47,11 +47,11 @@ export function LoginForm({ email }: LoginFormProps) {
           required
           autoComplete="email"
           defaultValue={email}
-          className="h-11 border-white/10 bg-black/50 transition-all focus:border-violet-500/50 focus:ring-violet-500/20"
+          className="h-11 transition-all"
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-zinc-300">
+        <Label htmlFor="password" className="form-label">
           Password
         </Label>
         <PasswordInput
@@ -60,7 +60,7 @@ export function LoginForm({ email }: LoginFormProps) {
           placeholder="Password"
           required
           autoComplete="current-password"
-          className="h-11 border-white/10 bg-black/50 transition-all focus:border-violet-500/50 focus:ring-violet-500/20"
+          className="h-11 transition-all"
         />
       </div>
       <SubmitButton />

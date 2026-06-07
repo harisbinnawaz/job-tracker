@@ -74,7 +74,7 @@ export function SignupForm() {
   return (
     <>
       {(error || passwordMismatch || passwordError) && (
-        <div className="mb-6 rounded-lg border border-red-500/50 bg-red-500/10 px-4 py-3 text-sm text-red-200 backdrop-blur-md">
+        <div className="theme-alert-danger mb-6 rounded-lg border px-4 py-3 text-sm backdrop-blur-md">
           {passwordMismatch
             ? "Passwords do not match"
             : passwordError
@@ -85,7 +85,7 @@ export function SignupForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="email" className="text-zinc-300">
+          <Label htmlFor="email" className="form-label">
             Email Address
           </Label>
           <Input
@@ -95,11 +95,11 @@ export function SignupForm() {
             placeholder="you@example.com"
             required
             autoComplete="email"
-            className="h-11 border-white/10 bg-black/50 transition-all focus:border-fuchsia-500/50 focus:ring-fuchsia-500/20"
+            className="h-11 transition-all"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-zinc-300">
+          <Label htmlFor="password" className="form-label">
             Password
           </Label>
           <PasswordInput
@@ -108,14 +108,14 @@ export function SignupForm() {
             placeholder="Password"
             required
             autoComplete="new-password"
-            className="h-11 border-white/10 bg-black/50 transition-all focus:border-fuchsia-500/50 focus:ring-fuchsia-500/20"
+            className="h-11 transition-all"
           />
-          <p className="text-xs leading-5 text-zinc-500">
+          <p className="form-helper text-xs leading-5">
             Use at least 8 characters with letters and numbers.
           </p>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="confirm-password" className="text-zinc-300">
+          <Label htmlFor="confirm-password" className="form-label">
             Confirm Password
           </Label>
           <PasswordInput
@@ -124,12 +124,12 @@ export function SignupForm() {
             placeholder="Password"
             required
             autoComplete="new-password"
-            className="h-11 border-white/10 bg-black/50 transition-all focus:border-fuchsia-500/50 focus:ring-fuchsia-500/20"
+            className="h-11 transition-all"
           />
         </div>
         <Button
           type="submit"
-          className="group mt-4 h-11 w-full bg-zinc-100 font-medium tracking-wide text-zinc-900 shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all duration-300 hover:bg-white hover:shadow-[0_0_25px_rgba(255,255,255,0.2)]"
+          className="group mt-4 h-11 w-full font-medium tracking-wide transition-all duration-300"
           disabled={isPending}
         >
           {isPending ? "Creating account..." : "Create account"}

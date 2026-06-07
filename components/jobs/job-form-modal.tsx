@@ -127,7 +127,7 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
+      className="theme-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div
@@ -135,7 +135,7 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
         onClick={(e) => e.stopPropagation()}
       >
         {/* Glow behind the modal */}
-        <div className="absolute inset-0 bg-violet-600/10 blur-[80px] rounded-full pointer-events-none" />
+        <div className="theme-ambient-primary pointer-events-none absolute inset-0 rounded-full blur-[80px]" />
 
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 px-6 py-5 relative z-10 bg-black/20">
@@ -155,37 +155,37 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
         <div className="overflow-y-auto p-6 relative z-10 custom-scrollbar">
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="rounded-lg border border-red-500/50 bg-red-500/10 px-4 py-3 text-sm text-red-200 backdrop-blur-md">
+              <div className="theme-alert-danger rounded-lg border px-4 py-3 text-sm backdrop-blur-md">
                 {error}
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="company" className="text-zinc-300">Company Name <span className="text-red-400">*</span></Label>
+              <Label htmlFor="company" className="form-label">Company Name <span className="text-red-400">*</span></Label>
               <Input
                 id="company"
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
                 placeholder="Acme Inc."
                 required
-                className="bg-black/50 border-white/10 focus:border-violet-500/50 focus:ring-violet-500/20 h-11 transition-all"
+                className="h-11 transition-all"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-zinc-300">Job Title <span className="text-red-400">*</span></Label>
+              <Label htmlFor="title" className="form-label">Job Title <span className="text-red-400">*</span></Label>
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Senior Engineer"
                 required
-                className="bg-black/50 border-white/10 focus:border-violet-500/50 focus:ring-violet-500/20 h-11 transition-all"
+                className="h-11 transition-all"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="experience" className="text-zinc-300">Experience Required <span className="text-red-400">*</span></Label>
+              <Label htmlFor="experience" className="form-label">Experience Required <span className="text-red-400">*</span></Label>
               <select
                 id="experience"
                 value={experienceRequired}
@@ -203,7 +203,7 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="date" className="text-zinc-300">Date Applied <span className="text-red-400">*</span></Label>
+              <Label htmlFor="date" className="form-label">Date Applied <span className="text-red-400">*</span></Label>
               <Input
                 id="date"
                 type="date"
@@ -218,12 +218,12 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
                   } catch {}
                 }}
                 required
-                className="relative w-full cursor-pointer bg-black/50 border-white/10 focus:border-violet-500/50 focus:ring-violet-500/20 h-11 transition-all pr-3 pl-3 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-3 [&::-webkit-calendar-picker-indicator]:w-5 [&::-webkit-calendar-picker-indicator]:h-5 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100"
+                className="relative h-11 w-full cursor-pointer pr-3 pl-3 transition-all [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-3 [&::-webkit-calendar-picker-indicator]:h-5 [&::-webkit-calendar-picker-indicator]:w-5 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60 hover:[&::-webkit-calendar-picker-indicator]:opacity-100"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="status" className="text-zinc-300">Status <span className="text-red-400">*</span></Label>
+              <Label htmlFor="status" className="form-label">Status <span className="text-red-400">*</span></Label>
               <select
                 id="status"
                 value={status}
@@ -242,31 +242,31 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="link" className="text-zinc-300">Job Link <span className="text-zinc-500">(optional)</span></Label>
+              <Label htmlFor="link" className="form-label">Job Link <span className="form-helper">(optional)</span></Label>
               <Input
                 id="link"
                 type="url"
                 value={jobLink}
                 onChange={(e) => setJobLink(e.target.value)}
                 placeholder="https://..."
-                className="bg-black/50 border-white/10 focus:border-violet-500/50 focus:ring-violet-500/20 h-11 transition-all"
+                className="h-11 transition-all"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="notes" className="text-zinc-300">Notes <span className="text-zinc-500">(optional)</span></Label>
+              <Label htmlFor="notes" className="form-label">Notes <span className="form-helper">(optional)</span></Label>
               <textarea
                 id="notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Add any notes..."
                 rows={3}
-                className="w-full rounded-lg border border-white/10 bg-black/50 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 transition-all focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/20 outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                className="form-field w-full rounded-lg border px-3 py-2 text-sm transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
             <div className="pt-2">
-              <p className="text-xs text-zinc-500">
+              <p className="form-helper text-xs">
                 Fields marked with <span className="text-red-400">*</span> are required.
               </p>
             </div>
@@ -278,14 +278,14 @@ export function JobFormModal({ job, open, onClose, onSaved }: JobFormModalProps)
                 variant="secondary"
                 onClick={onClose}
                 disabled={isPending}
-                className="flex-1 h-11 px-2 sm:px-4 text-sm sm:text-base whitespace-nowrap bg-white/5 hover:bg-white/10 text-white border-transparent transition-all"
+                className="h-11 flex-1 whitespace-nowrap px-2 text-sm transition-all sm:px-4 sm:text-base"
               >
                 Cancel
               </Button>
               <button
                 type="submit"
                 disabled={isPending}
-                className="flex-1 h-11 px-2 sm:px-4 text-sm sm:text-base truncate bg-violet-600 hover:bg-violet-500 text-white font-medium tracking-wide shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_25px_rgba(139,92,246,0.4)] transition-all border border-violet-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="theme-primary inline-flex h-11 flex-1 items-center justify-center truncate rounded-md border px-2 text-sm font-medium tracking-wide transition-all disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:text-base"
               >
                 {isPending ? "Saving..." : job ? "Save changes" : "Save application"}
               </button>

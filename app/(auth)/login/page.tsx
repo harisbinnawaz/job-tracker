@@ -15,8 +15,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     <div className="mx-auto flex w-full max-w-sm flex-col items-stretch">
       <header className="mb-6 flex w-full flex-col items-center text-center">
         <div className="mb-4 flex w-full justify-center">
-          <div className="flex size-[3.25rem] shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-tr from-violet-500/20 to-fuchsia-500/20 shadow-[0_0_30px_rgba(139,92,246,0.3)]">
-            <BriefcaseBusiness className="h-7 w-7 text-violet-400" />
+          <div className="theme-accent-icon flex size-[3.25rem] shrink-0 items-center justify-center rounded-2xl border">
+            <BriefcaseBusiness className="h-7 w-7" />
           </div>
         </div>
         <h1 className="mb-2 w-full text-3xl font-bold tracking-tight text-white">
@@ -29,13 +29,13 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
       <div className="glass-panel organic-rise-in w-full rounded-2xl p-6 sm:p-8">
         {message && (
-          <div className="mb-6 rounded-lg border border-green-500/50 bg-green-500/10 px-4 py-3 text-sm text-green-200 backdrop-blur-md">
+          <div className="theme-alert-success mb-6 rounded-lg border px-4 py-3 text-sm backdrop-blur-md">
             {decodeURIComponent(message)}
           </div>
         )}
 
         {error && (
-          <div className="mb-6 rounded-lg border border-red-500/50 bg-red-500/10 px-4 py-3 text-sm text-red-200 backdrop-blur-md">
+          <div className="theme-alert-danger mb-6 rounded-lg border px-4 py-3 text-sm backdrop-blur-md">
             {decodeURIComponent(error)}
           </div>
         )}

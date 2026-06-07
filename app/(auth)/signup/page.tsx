@@ -8,10 +8,10 @@ export const dynamic = "force-dynamic";
 function SignupFormFallback() {
   return (
     <div className="space-y-4">
-      <div className="h-11 animate-pulse rounded-md border border-white/5 bg-white/5" />
-      <div className="h-11 animate-pulse rounded-md border border-white/5 bg-white/5" />
-      <div className="h-11 animate-pulse rounded-md border border-white/5 bg-white/5" />
-      <div className="h-11 animate-pulse rounded-md border border-white/5 bg-white/5" />
+      <div className="theme-skeleton h-11 animate-pulse rounded-md border border-[var(--border)]" />
+      <div className="theme-skeleton h-11 animate-pulse rounded-md border border-[var(--border)]" />
+      <div className="theme-skeleton h-11 animate-pulse rounded-md border border-[var(--border)]" />
+      <div className="theme-skeleton h-11 animate-pulse rounded-md border border-[var(--border)]" />
     </div>
   );
 }
@@ -21,8 +21,8 @@ export default function SignupPage() {
     <div className="mx-auto flex w-full max-w-sm flex-col items-stretch">
       <header className="mb-6 flex w-full flex-col items-center text-center">
         <div className="mb-4 flex w-full justify-center">
-          <div className="flex size-[3.25rem] shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-tr from-fuchsia-500/20 to-violet-500/20 shadow-[0_0_30px_rgba(217,70,239,0.3)]">
-            <BriefcaseBusiness className="h-7 w-7 text-fuchsia-400" />
+          <div className="theme-accent-icon flex size-[3.25rem] shrink-0 items-center justify-center rounded-2xl border">
+            <BriefcaseBusiness className="h-7 w-7" />
           </div>
         </div>
         <h1 className="mb-2 w-full text-3xl font-bold tracking-tight text-white">

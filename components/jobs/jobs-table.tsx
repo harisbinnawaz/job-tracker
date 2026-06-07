@@ -121,7 +121,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
     return (
       <>
         <div className="text-center py-16 glass-panel rounded-2xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-violet-600/10 blur-[100px] pointer-events-none" />
+          <div className="theme-ambient-primary absolute inset-0 blur-[100px] pointer-events-none" />
           <div className="relative z-10">
             <Inbox className="h-14 w-14 mx-auto text-violet-400/50 mb-5" />
             <h2 className="text-xl font-semibold text-white mb-2">
@@ -132,7 +132,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
             </p>
             <Button 
               onClick={() => setIsAddModalOpen(true)}
-              className="bg-white text-zinc-900 hover:bg-zinc-200 font-medium tracking-wide shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] transition-all"
+              className="font-medium tracking-wide transition-all"
             >
               Add Application
             </Button>
@@ -165,7 +165,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
         </div>
         <Button 
           onClick={() => setIsAddModalOpen(true)}
-          className="bg-violet-600 hover:bg-violet-500 text-white font-medium tracking-wide shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_25px_rgba(139,92,246,0.4)] transition-all border border-violet-500/50"
+          className="font-medium tracking-wide transition-all"
         >
           Add Application
         </Button>
@@ -210,7 +210,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
         <div className="relative flex-1 min-w-48">
           <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
           <Input
-            className="pl-9 bg-black/40 border-transparent focus:border-violet-500/50 h-10 transition-all rounded-lg"
+            className="h-10 rounded-lg pl-9 transition-all"
             placeholder="Search company or role..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -245,7 +245,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
           variant="secondary"
           size="sm"
           onClick={() => setSortOrder((o) => (o === "desc" ? "asc" : "desc"))}
-          className="h-10 gap-2 bg-black/40 border-transparent hover:bg-black/60 hover:border-white/10 transition-all rounded-lg"
+          className="h-10 gap-2 rounded-lg transition-all"
         >
           <ArrowUpDown className="h-4 w-4" />
           {sortOrder === "desc" ? "Newest first" : "Oldest first"}
@@ -391,7 +391,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                           variant="ghost"
                           size="icon"
                           onClick={() => handleDeleteClick(job.id)}
-                          className="h-8 w-8 border border-red-500/20 bg-red-500/10 text-red-300 hover:bg-red-500/15 hover:text-red-200"
+                          className="theme-danger-control h-8 w-8 border"
                           title="Delete"
                           aria-label={`Delete ${job.company_name} application`}
                         >

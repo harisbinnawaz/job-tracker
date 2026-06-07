@@ -8,19 +8,21 @@ import { useFormStatus } from "react-dom";
 function SignOutProcessingDialog() {
   return (
     <div
-      className="signout-overlay fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-md"
-      role="status"
-      aria-live="polite"
-      aria-label="Signing out"
+      className="signout-overlay fixed inset-0 z-[100] grid min-h-dvh w-screen place-items-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="signout-title"
+      aria-describedby="signout-description"
+      aria-busy="true"
     >
       <div className="signout-dialog organic-rise-in w-full max-w-sm rounded-xl p-6 text-center shadow-2xl">
         <div className="mx-auto flex size-14 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--accent-soft)] text-[var(--accent)] shadow-[0_0_32px_var(--accent-glow)]">
           <LoaderCircle className="size-6 animate-spin" aria-hidden="true" />
         </div>
-        <h2 className="mt-5 text-base font-semibold text-[var(--foreground)]">
+        <h2 id="signout-title" className="mt-5 text-base font-semibold text-[var(--foreground)]">
           Signing you out
         </h2>
-        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+        <p id="signout-description" className="mt-2 text-sm leading-6 text-[var(--muted)]">
           Securing your session and returning you to the login screen.
         </p>
         <div className="signout-progress mt-5 overflow-hidden rounded-full bg-[var(--surface-muted)]">

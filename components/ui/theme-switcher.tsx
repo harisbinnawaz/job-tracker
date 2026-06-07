@@ -1,11 +1,11 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { Check, Moon, Palette, Sun, Sunrise } from "lucide-react";
+import { Check, Moon, Palette, Sunrise } from "lucide-react";
 import type { ComponentType } from "react";
 import { useEffect, useState, useTransition } from "react";
 import { saveThemePreference } from "@/app/(dashboard)/actions";
-import { APP_THEMES, type AppTheme } from "@/lib/themes";
+import { APP_THEMES, DEFAULT_APP_THEME, type AppTheme } from "@/lib/themes";
 import { cn } from "@/lib/utils";
 
 const themeOptions: Record<
@@ -14,7 +14,6 @@ const themeOptions: Record<
 > = {
   dark: { label: "Dark", icon: Moon },
   warm: { label: "Warm", icon: Sunrise },
-  light: { label: "Light", icon: Sun },
   vibrant: { label: "Vibrant", icon: Palette },
 };
 
@@ -29,12 +28,12 @@ export function ThemeSwitcher({ className }: { className?: string }) {
   }, []);
 
   if (!mounted) {
-    return <div className={cn("h-9 w-[19rem] max-w-full", className)} />;
+    return <div className={cn("h-9 w-[15rem] max-w-full", className)} />;
   }
 
   const selectedTheme = APP_THEMES.includes(theme as AppTheme)
     ? (theme as AppTheme)
-    : "dark";
+    : DEFAULT_APP_THEME;
 
   function handleThemeChange(nextTheme: AppTheme) {
     setTheme(nextTheme);
@@ -50,7 +49,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "grid grid-cols-4 gap-1 rounded-lg border p-1",
+        "grid grid-cols-3 gap-1 rounded-lg border p-1",
         "border-[var(--border)] bg-[var(--surface-muted)]",
         className
       )}

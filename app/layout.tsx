@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { createClient } from "@/lib/supabase/server";
-import { APP_THEMES, getUserTheme } from "@/lib/themes";
+import { APP_THEMES, DEFAULT_APP_THEME } from "@/lib/themes";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -22,23 +21,11 @@ export const metadata: Metadata = {
   description: "A premium, minimal job application tracking tool.",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  let initialTheme = "dark";
-
-  try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    initialTheme = getUserTheme(user?.user_metadata?.theme);
-  } catch {
-    initialTheme = "dark";
-  }
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -46,7 +33,7 @@ export default async function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme={initialTheme}
+          defaultTheme={DEFAULT_APP_THEME}
           themes={[...APP_THEMES]}
           enableSystem={false}
           storageKey="job-tracker-theme"

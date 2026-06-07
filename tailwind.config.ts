@@ -15,7 +15,7 @@ const config: Config = {
       },
       colors: {
         // Design token aliases — use these throughout the app
-        // Light: zinc-50 bg, zinc-900 text | Dark: zinc-950 bg, zinc-100 text
+        // Themes are sourced from CSS variables in app/globals.css.
       },
     },
   },
