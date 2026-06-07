@@ -162,7 +162,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
     });
   };
 
-  const handleRowKeyDown = (event: React.KeyboardEvent<HTMLTableRowElement>, job: Job) => {
+  const handleRowKeyDown = (event: React.KeyboardEvent<HTMLElement>, job: Job) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       setViewingJob(job);
@@ -493,117 +493,132 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                 onClick={() => setViewingJob(job)}
                 onKeyDown={(event) => handleRowKeyDown(event, job)}
                 aria-label={`View details for ${job.job_title} at ${job.company_name}`}
-                className="flex flex-col gap-3 relative p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-strong)] active:scale-[0.99] transition-all cursor-pointer shadow-sm w-full organic-rise-row"
+                className="flex flex-col relative p-5 rounded-3xl border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-strong)] active:scale-[0.99] transition-all cursor-pointer shadow-sm w-full organic-rise-row"
                 style={{ animationDelay: `${Math.min(index * 42, 260)}ms` }}
               >
-                <div className="absolute top-5 right-5 z-10">
-                  <StatusBadge status={job.status} />
-                </div>
-                
-                <div className="flex items-center gap-3 pr-24">
-                  <div className="theme-accent-icon flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border bg-black/20">
-                    <Building2 className="h-4 w-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="truncate text-base font-bold text-white">
-                      {job.company_name}
-                    </p>
-                    <p className="truncate text-sm font-medium text-zinc-300">
-                      {job.job_title}
-                    </p>
+                {/* Header Row */}
+                <div className="flex items-start justify-between mb-2">
+                  <h3 className="text-[19px] leading-tight font-bold text-[var(--foreground)] pr-4">
+                    {job.job_title}
+                  </h3>
+                  <div className="shrink-0">
+                    <StatusBadge status={job.status} />
                   </div>
                 </div>
 
-                {job.notes && (
-                  <div className="mt-1 rounded-lg bg-black/10 p-3 border border-white/[0.05]">
-                    <p className="line-clamp-2 text-xs leading-5 text-zinc-400">
-                      {job.notes}
-                    </p>
-                  </div>
-                )}
+                {/* Notes Row */}
+                <p className="text-[14px] text-[var(--muted)] mb-6 line-clamp-2">
+                  {job.notes || "No notes attached"}
+                </p>
 
-                <div className="grid grid-cols-2 gap-3 mt-1 pt-4 border-t border-white/[0.05]">
-                  <div>
-                    <span className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 mb-1">
-                      Experience
+                {/* Key-Value List */}
+                <div className="flex flex-col space-y-4 mb-5">
+                  {/* Company */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--muted)]">
+                      Company
                     </span>
-                    <span className="text-sm text-zinc-300">
-                      {job.experience_required}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-[34px] w-[34px] items-center justify-center rounded-[12px] border border-[var(--accent-glow)] bg-[var(--accent-soft)] text-[var(--accent)]">
+                        <Building2 className="h-4 w-4" />
+                      </div>
+                      <span className="font-bold text-[15px] text-[var(--foreground)]">
+                        {job.company_name}
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <span className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 mb-1">
+
+                  {/* Date Applied */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--muted)]">
                       Date Applied
                     </span>
-                    <span className="text-sm text-zinc-300" suppressHydrationWarning>
+                    <span className="text-[15px] text-[var(--foreground)]" suppressHydrationWarning>
                       {formatJobDate(job.date_applied)}
                     </span>
                   </div>
-                </div>
 
-                <div className="flex items-center justify-between mt-2 pt-3 border-t border-white/[0.05]" onClick={(e) => e.stopPropagation()}>
-                  <div>
+                  {/* Experience */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--muted)]">
+                      Experience
+                    </span>
+                    <span className="text-[15px] text-[var(--foreground)]">
+                      {job.experience_required}
+                    </span>
+                  </div>
+
+                  {/* Job Link */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--muted)]">
+                      Job Link
+                    </span>
                     {job.job_link ? (
                       <a
                         href={job.job_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--accent)] hover:text-white transition-colors py-1.5 px-3 rounded-md bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20"
+                        className="text-[var(--foreground)] hover:opacity-70 transition-opacity p-1"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <ExternalLink className="h-3.5 w-3.5" />
-                        View Posting
+                        <ExternalLink className="h-5 w-5" />
                       </a>
                     ) : (
-                      <span className="text-xs text-zinc-600 py-1.5">No link provided</span>
+                      <span className="text-sm font-medium text-[var(--muted)]">-</span>
                     )}
                   </div>
+                </div>
 
-                  <div className="flex items-center gap-1">
-                    {deletingId === job.id ? (
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-zinc-400">Delete?</span>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          className="h-7 px-2 text-[10px]"
-                          onClick={() => handleConfirmDelete(job.id)}
-                          disabled={isPending}
-                        >
-                          Yes
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-7 px-2 text-[10px] hover:bg-white/10"
-                          onClick={() => setDeletingId(null)}
-                          disabled={isPending}
-                        >
-                          No
-                        </Button>
-                      </div>
-                    ) : (
-                      <>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-white/10"
-                          onClick={() => setEditingJob(job)}
-                          title="Edit"
-                        >
-                          <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeleteClick(job.id)}
-                          className="theme-danger-control h-8 w-8 border"
-                          title="Delete"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </>
-                    )}
-                  </div>
+                {/* Footer Divider */}
+                <div className="mt-auto pt-4 border-t border-[var(--border)] flex items-center justify-end gap-4" onClick={(e) => e.stopPropagation()}>
+                  <button
+                    type="button"
+                    className="p-2 text-[var(--muted-strong)] hover:text-[var(--foreground)] transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingJob(job);
+                    }}
+                  >
+                    <Pencil className="h-[18px] w-[18px]" />
+                  </button>
+
+                  {deletingId === job.id ? (
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="h-10 px-4 text-xs rounded-xl"
+                        onClick={() => handleConfirmDelete(job.id)}
+                        disabled={isPending}
+                      >
+                        Yes
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-10 px-4 text-xs bg-[var(--danger-soft)] text-[var(--danger)] hover:bg-[var(--danger-soft)]/70 rounded-xl"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeletingId(null);
+                        }}
+                        disabled={isPending}
+                      >
+                        No
+                      </Button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      className="flex h-[40px] w-[40px] items-center justify-center rounded-[12px] border border-[var(--danger-border)] bg-[var(--danger-soft)] text-[var(--danger)] hover:bg-[var(--danger-soft)]/80 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeletingId(job.id);
+                      }}
+                      disabled={isPending}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
