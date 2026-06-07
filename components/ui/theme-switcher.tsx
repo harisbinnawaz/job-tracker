@@ -49,7 +49,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "grid grid-cols-3 gap-1 rounded-lg border p-1",
+        "flex w-full md:w-auto md:inline-flex p-1 gap-1 items-center border rounded-2xl",
         "border-[var(--border)] bg-[var(--surface-muted)]",
         className
       )}
@@ -69,15 +69,15 @@ export function ThemeSwitcher({ className }: { className?: string }) {
             aria-pressed={active}
             title={`${option.label} theme`}
             className={cn(
-              "inline-flex h-8 min-w-0 items-center justify-center gap-1.5 rounded-md px-2 text-xs font-medium transition-all",
+              "flex-1 md:flex-none flex items-center justify-center py-2 px-3 md:px-4 rounded-xl text-xs font-medium transition-all min-w-0",
               active
                 ? "theme-primary"
                 : "text-[var(--muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)]"
             )}
           >
-            <Icon className="h-3.5 w-3.5 shrink-0" />
-            <span className="hidden sm:inline">{option.label}</span>
-            {active && <Check className="hidden h-3 w-3 shrink-0 sm:block" />}
+            <Icon className="h-4 w-4 shrink-0" />
+            <span className="hidden md:inline-flex md:ml-2">{option.label}</span>
+            {active && <Check className="hidden md:inline-flex md:ml-2 h-3.5 w-3.5 shrink-0" />}
           </button>
         );
       })}

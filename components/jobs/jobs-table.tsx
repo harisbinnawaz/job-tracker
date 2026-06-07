@@ -41,8 +41,6 @@ const spacedCellClass =
   "border-y border-[var(--border)] bg-[var(--surface)] px-5 py-4 transition-all duration-200 ease-out group-hover:scale-[1.012] group-hover:bg-[var(--surface-strong)] group-hover:shadow-[0_20px_42px_-32px_var(--accent-glow)] group-focus-visible:scale-[1.012] group-focus-visible:bg-[var(--surface-strong)]";
 const centeredCellClass = `${spacedCellClass} align-middle`;
 const stackedCellClass = `${spacedCellClass} align-top`;
-const baseCellClass =
-  "block md:table-cell bg-transparent md:bg-[var(--surface)] border-0 md:border-y md:border-[var(--border)] p-0 md:px-5 md:py-4 transition-all duration-200 ease-out group-hover:bg-transparent md:group-hover:bg-[var(--surface-strong)] group-hover:scale-100 md:group-hover:scale-[1.012] group-hover:shadow-none md:group-hover:shadow-[0_20px_42px_-32px_var(--accent-glow)] group-focus-visible:scale-100 md:group-focus-visible:scale-[1.012] group-focus-visible:bg-transparent md:group-focus-visible:bg-[var(--surface-strong)]";
 
 function formatJobDate(value: string | null | undefined) {
   if (!value) {
@@ -205,9 +203,9 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
   return (
     <>
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8 w-full flex-wrap overflow-hidden sm:overflow-visible">
+        <div className="min-w-0">
+          <h1 className="text-3xl font-bold text-white tracking-tight truncate">
             Applications
           </h1>
           <p className="mt-2 text-sm text-zinc-400">
@@ -219,7 +217,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
         </div>
         <Button 
           onClick={() => setIsAddModalOpen(true)}
-          className="font-medium tracking-wide transition-all"
+          className="font-medium tracking-wide transition-all w-full sm:w-auto shrink-0"
         >
           Add Application
         </Button>
@@ -330,53 +328,51 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
           </Button>
         </div>
       ) : (
-        <div className="overflow-x-auto md:overflow-x-visible rounded-2xl glass-panel p-3 md:px-3 md:pb-3 md:pt-0">
-          <table className="w-full min-w-0 md:min-w-[980px] text-left block md:table md:border-separate md:border-spacing-y-3">
-            <thead className="hidden md:table-header-group">
-              <tr>
-                <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
-                  Company
-                </th>
-                <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
-                  Role & Notes
-                </th>
-                <th className="hidden px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400 md:table-cell">
-                  Experience
-                </th>
-                <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
-                  Date Applied
-                </th>
-                <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
-                  Status
-                </th>
-                <th className="hidden px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400 sm:table-cell">
-                  Link
-                </th>
-                <th className="px-5 pb-1 pt-4 text-right text-xs font-semibold uppercase tracking-widest text-zinc-400">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="block md:table-row-group space-y-4 md:space-y-0">
-              {filteredJobs.map((job, index) => (
-                <tr
-                  key={job.id}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => setViewingJob(job)}
-                  onKeyDown={(event) => handleRowKeyDown(event, job)}
-                  aria-label={`View details for ${job.job_title} at ${job.company_name}`}
-                  className="organic-rise-row group cursor-pointer outline-none flex flex-col gap-3.5 md:table-row relative p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-strong)] transition-all md:border-0 md:rounded-none md:bg-transparent md:p-0 hover:scale-[1.012] md:hover:scale-100 hover:shadow-[0_20px_42px_-32px_var(--accent-glow)] md:hover:shadow-none"
-                  style={{ animationDelay: `${Math.min(index * 42, 260)}ms` }}
-                >
-                  <td className={`${baseCellClass} border-l-0 md:border-l md:rounded-l-xl md:align-middle order-2`}>
-                    <div className="flex min-w-0 items-center justify-between w-full md:justify-start md:gap-3">
-                      <span className="text-xs font-semibold uppercase tracking-widest text-zinc-500 md:hidden">
-                        Company
-                      </span>
+        <>
+          {/* Desktop View */}
+          <div className="hidden md:block w-full max-w-full overflow-x-auto rounded-2xl glass-panel px-3 pb-3">
+            <table className="w-full min-w-[980px] border-separate border-spacing-y-3 text-left">
+              <thead>
+                <tr>
+                  <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
+                    Company
+                  </th>
+                  <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
+                    Role & Notes
+                  </th>
+                  <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
+                    Experience
+                  </th>
+                  <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
+                    Date Applied
+                  </th>
+                  <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
+                    Status
+                  </th>
+                  <th className="px-5 pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">
+                    Link
+                  </th>
+                  <th className="px-5 pb-1 pt-4 text-right text-xs font-semibold uppercase tracking-widest text-zinc-400">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredJobs.map((job, index) => (
+                  <tr
+                    key={job.id}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setViewingJob(job)}
+                    onKeyDown={(event) => handleRowKeyDown(event, job)}
+                    aria-label={`View details for ${job.job_title} at ${job.company_name}`}
+                    className="organic-rise-row group cursor-pointer outline-none"
+                    style={{ animationDelay: `${Math.min(index * 42, 260)}ms` }}
+                  >
+                    <td className={`${centeredCellClass} rounded-l-xl border-l`}>
                       <div className="flex min-w-0 items-center gap-3">
-                        <div className="theme-accent-icon flex h-8 w-8 md:h-9 md:w-9 shrink-0 items-center justify-center rounded-lg border">
-                          <Building2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                        <div className="theme-accent-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border">
+                          <Building2 className="h-4 w-4" />
                         </div>
                         <div className="min-w-0">
                           <p className="truncate text-sm font-semibold text-white">
@@ -384,73 +380,192 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                           </p>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className={`${baseCellClass} md:align-top order-1`}>
-                    <div className="max-w-[26rem] pr-20 md:pr-0">
-                      <p className="text-base font-bold text-white md:text-sm md:font-medium md:text-zinc-200">
-                        {job.job_title}
-                      </p>
-                      {job.notes ? (
-                        <p className="mt-2 max-h-12 md:max-h-10 overflow-hidden text-xs leading-5 text-zinc-400 md:text-zinc-500">
-                          {job.notes}
+                    </td>
+                    <td className={stackedCellClass}>
+                      <div className="max-w-[26rem]">
+                        <p className="text-sm font-medium text-zinc-200">
+                          {job.job_title}
                         </p>
+                        {job.notes ? (
+                          <p className="mt-2 max-h-10 overflow-hidden text-xs leading-5 text-zinc-500">
+                            {job.notes}
+                          </p>
+                        ) : (
+                          <p className="mt-2 text-xs leading-5 text-zinc-600">
+                            No notes attached
+                          </p>
+                        )}
+                      </div>
+                    </td>
+                    <td className={`${centeredCellClass} text-sm text-zinc-400`}>
+                      <span className="text-sm text-zinc-400">
+                        {job.experience_required}
+                      </span>
+                    </td>
+                    <td className={`${centeredCellClass} text-sm text-zinc-400`}>
+                      <span className="text-sm text-zinc-400" suppressHydrationWarning>
+                        {formatJobDate(job.date_applied)}
+                      </span>
+                    </td>
+                    <td className={`${centeredCellClass} text-sm`}>
+                      <StatusBadge status={job.status} />
+                    </td>
+                    <td className={`${centeredCellClass} text-sm`}>
+                      {job.job_link ? (
+                        <a
+                          href={job.job_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(event) => event.stopPropagation()}
+                          className="inline-flex items-center justify-center p-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+                          aria-label={`Open job posting for ${job.company_name}`}
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
                       ) : (
-                        <p className="mt-2 text-xs leading-5 text-zinc-600">
-                          No notes attached
-                        </p>
+                        <span className="text-zinc-600">—</span>
                       )}
-                    </div>
-                  </td>
-                  <td className={`${baseCellClass} md:align-middle order-4 flex items-center justify-between md:table-cell`}>
-                    <span className="text-xs font-semibold uppercase tracking-widest text-zinc-500 md:hidden">
+                    </td>
+                    <td
+                      className={`${centeredCellClass} rounded-r-xl border-r text-right`}
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      {deletingId === job.id ? (
+                        <div className="flex items-center justify-end gap-2">
+                          <span className="text-xs text-zinc-400">Delete?</span>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            className="h-8 px-2 text-xs"
+                            onClick={() => handleConfirmDelete(job.id)}
+                            disabled={isPending}
+                          >
+                            Yes
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 px-2 text-xs hover:bg-white/10"
+                            onClick={() => setDeletingId(null)}
+                            disabled={isPending}
+                          >
+                            No
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-white/10"
+                            onClick={() => setEditingJob(job)}
+                            title="Edit"
+                            aria-label={`Edit ${job.company_name} application`}
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDeleteClick(job.id)}
+                            className="theme-danger-control h-8 w-8 border"
+                            title="Delete"
+                            aria-label={`Delete ${job.company_name} application`}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile View */}
+          <div className="block md:hidden w-full space-y-4 pb-4 overflow-x-hidden">
+            {filteredJobs.map((job, index) => (
+              <div
+                key={job.id}
+                role="button"
+                tabIndex={0}
+                onClick={() => setViewingJob(job)}
+                onKeyDown={(event) => handleRowKeyDown(event, job)}
+                aria-label={`View details for ${job.job_title} at ${job.company_name}`}
+                className="flex flex-col gap-3 relative p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-strong)] active:scale-[0.99] transition-all cursor-pointer shadow-sm w-full organic-rise-row"
+                style={{ animationDelay: `${Math.min(index * 42, 260)}ms` }}
+              >
+                <div className="absolute top-5 right-5 z-10">
+                  <StatusBadge status={job.status} />
+                </div>
+                
+                <div className="flex items-center gap-3 pr-24">
+                  <div className="theme-accent-icon flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border bg-black/20">
+                    <Building2 className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate text-base font-bold text-white">
+                      {job.company_name}
+                    </p>
+                    <p className="truncate text-sm font-medium text-zinc-300">
+                      {job.job_title}
+                    </p>
+                  </div>
+                </div>
+
+                {job.notes && (
+                  <div className="mt-1 rounded-lg bg-black/10 p-3 border border-white/[0.05]">
+                    <p className="line-clamp-2 text-xs leading-5 text-zinc-400">
+                      {job.notes}
+                    </p>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-3 mt-1 pt-4 border-t border-white/[0.05]">
+                  <div>
+                    <span className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 mb-1">
                       Experience
                     </span>
-                    <span className="text-sm text-zinc-300 md:text-zinc-400">
+                    <span className="text-sm text-zinc-300">
                       {job.experience_required}
                     </span>
-                  </td>
-                  <td className={`${baseCellClass} md:align-middle order-3 flex items-center justify-between md:table-cell`}>
-                    <span className="text-xs font-semibold uppercase tracking-widest text-zinc-500 md:hidden">
+                  </div>
+                  <div>
+                    <span className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 mb-1">
                       Date Applied
                     </span>
-                    <span className="text-sm text-zinc-300 md:text-zinc-400" suppressHydrationWarning>
+                    <span className="text-sm text-zinc-300" suppressHydrationWarning>
                       {formatJobDate(job.date_applied)}
                     </span>
-                  </td>
-                  <td className="absolute top-5 right-5 md:static block md:table-cell bg-transparent md:bg-[var(--surface)] border-0 md:border-y md:border-[var(--border)] p-0 md:px-5 md:py-4 transition-all duration-200 ease-out md:align-middle order-none">
-                    <StatusBadge status={job.status} />
-                  </td>
-                  <td className={`${baseCellClass} md:align-middle order-5 text-sm flex items-center justify-between md:table-cell`}>
-                    <span className="text-xs font-semibold uppercase tracking-widest text-zinc-500 md:hidden">
-                      Job Link
-                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between mt-2 pt-3 border-t border-white/[0.05]" onClick={(e) => e.stopPropagation()}>
+                  <div>
                     {job.job_link ? (
                       <a
                         href={job.job_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={(event) => event.stopPropagation()}
-                        className="inline-flex items-center justify-center p-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
-                        aria-label={`Open job posting for ${job.company_name}`}
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--accent)] hover:text-white transition-colors py-1.5 px-3 rounded-md bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20"
                       >
-                        <ExternalLink className="h-4 w-4" />
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        View Posting
                       </a>
                     ) : (
-                      <span className="text-zinc-500 md:text-zinc-600">—</span>
+                      <span className="text-xs text-zinc-600 py-1.5">No link provided</span>
                     )}
-                  </td>
-                  <td
-                    className={`${baseCellClass} border-r-0 md:border-r md:rounded-r-xl md:align-middle order-6 flex items-center justify-end w-full border-t border-[var(--border)] pt-3.5 mt-2 md:border-t-0 md:pt-0 md:mt-0`}
-                    onClick={(event) => event.stopPropagation()}
-                  >
+                  </div>
+
+                  <div className="flex items-center gap-1">
                     {deletingId === job.id ? (
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center gap-2">
                         <span className="text-xs text-zinc-400">Delete?</span>
                         <Button
                           variant="destructive"
                           size="sm"
-                          className="h-8 px-2 text-xs"
+                          className="h-7 px-2 text-[10px]"
                           onClick={() => handleConfirmDelete(job.id)}
                           disabled={isPending}
                         >
@@ -459,7 +574,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 px-2 text-xs hover:bg-white/10"
+                          className="h-7 px-2 text-[10px] hover:bg-white/10"
                           onClick={() => setDeletingId(null)}
                           disabled={isPending}
                         >
@@ -467,14 +582,13 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                         </Button>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-end gap-1">
+                      <>
                         <Button
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-white/10"
                           onClick={() => setEditingJob(job)}
                           title="Edit"
-                          aria-label={`Edit ${job.company_name} application`}
                         >
                           <Pencil className="h-3.5 w-3.5" />
                         </Button>
@@ -484,18 +598,17 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                           onClick={() => handleDeleteClick(job.id)}
                           className="theme-danger-control h-8 w-8 border"
                           title="Delete"
-                          aria-label={`Delete ${job.company_name} application`}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
-                      </div>
+                      </>
                     )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Modals */}
