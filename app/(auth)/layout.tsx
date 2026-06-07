@@ -1,3 +1,5 @@
+import AuthShell from "@/components/auth/auth-shell";
+
 export default function AuthLayout({
   children,
 }: {
@@ -16,8 +18,8 @@ export default function AuthLayout({
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,var(--accent-soft),transparent_70%)]" />
       </div>
 
-      <div className="relative z-10 flex w-full flex-col items-center px-4 pb-8 pt-10 sm:pt-14">
-        {children}
+      <div className="relative z-10 flex w-full flex-col items-center px-3 py-3 sm:px-4 sm:py-3">
+        <AuthShell>{children}</AuthShell>
       </div>
     </div>
   );

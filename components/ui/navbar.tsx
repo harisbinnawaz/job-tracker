@@ -1,19 +1,14 @@
 import Link from "next/link";
 import { LogoutButton } from "@/components/auth/logout-button";
-import { createClient } from "@/lib/supabase/server";
 import { BriefcaseBusiness } from "lucide-react";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
+import type { VerifiedUser } from "@/lib/supabase/server";
 
-export async function Navbar() {
-  let user = null;
-  try {
-    const supabase = await createClient();
-    const { data } = await supabase.auth.getUser();
-    user = data?.user;
-  } catch (error) {
-    console.error("Navbar error:", error);
-    // Continue without user info
-  }
+interface NavbarProps {
+  user?: VerifiedUser | null;
+}
+
+export function Navbar({ user }: NavbarProps) {
 
   return (
     <header className="sticky top-0 z-40 w-full glass-panel border-b-0">

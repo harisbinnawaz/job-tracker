@@ -35,10 +35,23 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // Refresh session — do not remove this block
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: claimsData } = await supabase.auth.getClaims();
+  let user = null;
+
+  if (claimsData?.claims?.sub) {
+    user = {
+      id: claimsData.claims.sub,
+      email:
+        typeof claimsData.claims.email === "string"
+          ? claimsData.claims.email
+          : undefined,
+    };
+  } else {
+    const {
+      data: { user: remoteUser },
+    } = await supabase.auth.getUser();
+    user = remoteUser ?? null;
+  }
 
   const pathname = request.nextUrl.pathname;
   const isAuthPage =

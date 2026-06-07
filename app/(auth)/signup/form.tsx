@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, LoaderCircle } from "lucide-react";
 
 function isNextRedirectError(error: unknown): boolean {
   return (
@@ -74,7 +74,7 @@ export function SignupForm() {
   return (
     <>
       {(error || passwordMismatch || passwordError) && (
-        <div className="theme-alert-danger mb-6 rounded-lg border px-4 py-3 text-sm backdrop-blur-md">
+        <div className="theme-alert-danger mb-4 rounded-lg border px-3 py-2 text-sm backdrop-blur-md">
           {passwordMismatch
             ? "Passwords do not match"
             : passwordError
@@ -83,8 +83,8 @@ export function SignupForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-1.5">
+      <form onSubmit={handleSubmit} className="space-y-2">
+        <div className="space-y-1">
           <Label htmlFor="email" className="form-label">
             Email Address
           </Label>
@@ -95,10 +95,10 @@ export function SignupForm() {
             placeholder="you@example.com"
             required
             autoComplete="email"
-            className="h-11 transition-all"
+            className="h-10"
           />
         </div>
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <Label htmlFor="password" className="form-label">
             Password
           </Label>
@@ -108,13 +108,13 @@ export function SignupForm() {
             placeholder="Password"
             required
             autoComplete="new-password"
-            className="h-11 transition-all"
+            className="h-10"
           />
           <p className="form-helper text-xs leading-5">
             Use at least 8 characters with letters and numbers.
           </p>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <Label htmlFor="confirm-password" className="form-label">
             Confirm Password
           </Label>
@@ -124,16 +124,19 @@ export function SignupForm() {
             placeholder="Password"
             required
             autoComplete="new-password"
-            className="h-11 transition-all"
+            className="h-10"
           />
         </div>
         <Button
           type="submit"
-          className="group mt-4 h-11 w-full font-medium tracking-wide transition-all duration-300"
+          className="group mt-2 h-10 w-full font-medium tracking-wide transition-all duration-300"
           disabled={isPending}
+          aria-busy={isPending}
         >
           {isPending ? "Creating account..." : "Create account"}
-          {!isPending && (
+          {isPending ? (
+            <LoaderCircle className="ml-2 h-4 w-4 animate-spin opacity-70" />
+          ) : (
             <ArrowRight className="ml-2 h-4 w-4 opacity-70 transition-transform group-hover:translate-x-1" />
           )}
         </Button>

@@ -38,7 +38,9 @@ const metricStyles: Record<JobStatus, string> = {
 };
 
 const spacedCellClass =
-  "border-y border-[var(--border)] bg-[var(--surface)] px-5 py-4 align-top transition-all duration-200 ease-out group-hover:scale-[1.012] group-hover:bg-[var(--surface-strong)] group-hover:shadow-[0_20px_42px_-32px_var(--accent-glow)] group-focus-visible:scale-[1.012] group-focus-visible:bg-[var(--surface-strong)]";
+  "border-y border-[var(--border)] bg-[var(--surface)] px-5 py-4 transition-all duration-200 ease-out group-hover:scale-[1.012] group-hover:bg-[var(--surface-strong)] group-hover:shadow-[0_20px_42px_-32px_var(--accent-glow)] group-focus-visible:scale-[1.012] group-focus-visible:bg-[var(--surface-strong)]";
+const centeredCellClass = `${spacedCellClass} align-middle`;
+const stackedCellClass = `${spacedCellClass} align-top`;
 
 function formatJobDate(value: string | null | undefined) {
   if (!value) {
@@ -365,9 +367,9 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                   className="organic-rise-row group cursor-pointer outline-none"
                   style={{ animationDelay: `${Math.min(index * 42, 260)}ms` }}
                 >
-                  <td className={`${spacedCellClass} rounded-l-xl border-l`}>
-                    <div className="flex min-w-0 items-start gap-3">
-                      <div className="theme-accent-icon mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border">
+                  <td className={`${centeredCellClass} rounded-l-xl border-l`}>
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="theme-accent-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border">
                         <Building2 className="h-4 w-4" />
                       </div>
                       <div className="min-w-0">
@@ -377,7 +379,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                       </div>
                     </div>
                   </td>
-                  <td className={spacedCellClass}>
+                  <td className={stackedCellClass}>
                     <div className="max-w-[26rem]">
                       <p className="text-sm font-medium text-zinc-200">
                         {job.job_title}
@@ -393,16 +395,16 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                       )}
                     </div>
                   </td>
-                  <td className={`${spacedCellClass} hidden text-sm text-zinc-400 md:table-cell`}>
+                  <td className={`${centeredCellClass} hidden text-sm text-zinc-400 md:table-cell`}>
                     {job.experience_required}
                   </td>
-                  <td className={`${spacedCellClass} text-sm text-zinc-400`}>
+                  <td className={`${centeredCellClass} text-sm text-zinc-400`}>
                     <span suppressHydrationWarning>{formatJobDate(job.date_applied)}</span>
                   </td>
-                  <td className={`${spacedCellClass} text-sm`}>
+                  <td className={`${centeredCellClass} text-sm`}>
                     <StatusBadge status={job.status} />
                   </td>
-                  <td className={`${spacedCellClass} hidden text-sm sm:table-cell`}>
+                  <td className={`${centeredCellClass} hidden text-sm sm:table-cell`}>
                     {job.job_link ? (
                       <a
                         href={job.job_link}
@@ -419,7 +421,7 @@ export function JobsTable({ initialJobs }: JobsTableProps) {
                     )}
                   </td>
                   <td
-                    className={`${spacedCellClass} rounded-r-xl border-r text-right`}
+                    className={`${centeredCellClass} rounded-r-xl border-r text-right`}
                     onClick={(event) => event.stopPropagation()}
                   >
                     {deletingId === job.id ? (

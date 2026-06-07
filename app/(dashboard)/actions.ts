@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getVerifiedUserId } from "@/lib/supabase/server";
 import { isAppTheme, type AppTheme } from "@/lib/themes";
 import {
   JOB_STATUSES,
@@ -37,11 +37,8 @@ export async function saveThemePreference(theme: AppTheme) {
   }
 
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
+  const userId = await getVerifiedUserId();
+  if (!userId) {
     redirect("/login");
   }
 
@@ -57,18 +54,18 @@ export async function saveThemePreference(theme: AppTheme) {
 }
 
 // --- READ ---
-export async function getJobs() {
+export async function getJobs(userId?: string) {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const id = userId ?? (await getVerifiedUserId());
+    if (!id) {
       redirect("/login");
     }
 
     const { data, error } = await supabase
       .from("jobs")
       .select("*")
-      .eq("user_id", user.id)
+      .eq("user_id", id)
       .order("date_applied", { ascending: false });
 
     if (error) {
@@ -91,8 +88,8 @@ export async function createJob(payload: JobInsert) {
     assertValidJobPayload(payload);
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const userId = await getVerifiedUserId();
+    if (!userId) {
       redirect("/login");
     }
 
@@ -101,7 +98,7 @@ export async function createJob(payload: JobInsert) {
       .insert({
         ...payload,
         status: payload.status as JobStatus,
-        user_id: user.id,
+        user_id: userId,
       })
       .select("*")
       .single();
@@ -124,8 +121,8 @@ export async function updateJob(id: string, payload: JobUpdate) {
     assertValidJobPayload(payload);
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const userId = await getVerifiedUserId();
+    if (!userId) {
       redirect("/login");
     }
 
@@ -133,7 +130,7 @@ export async function updateJob(id: string, payload: JobUpdate) {
       .from("jobs")
       .update(payload)
       .eq("id", id)
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .select("*")
       .single();
 
@@ -153,8 +150,8 @@ export async function updateJob(id: string, payload: JobUpdate) {
 export async function deleteJob(id: string) {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const userId = await getVerifiedUserId();
+    if (!userId) {
       redirect("/login");
     }
 
@@ -162,7 +159,7 @@ export async function deleteJob(id: string) {
       .from("jobs")
       .delete()
       .eq("id", id)
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     if (error) {
       console.error("Error deleting job:", error);

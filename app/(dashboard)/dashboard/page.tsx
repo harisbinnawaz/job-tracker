@@ -1,10 +1,8 @@
 import { getJobs } from "../actions";
 import JobsTableShell from "@/components/jobs/jobs-table-shell";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getVerifiedUser } from "@/lib/supabase/server";
 import type { Job } from "@/lib/types";
-
-export const dynamic = "force-dynamic";
 
 function isNextRedirectError(error: unknown): boolean {
   return (
@@ -20,11 +18,10 @@ export default async function DashboardPage() {
   let jobs: Job[] = [];
 
   try {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = await getVerifiedUser();
     if (!user) redirect("/login");
 
-    jobs = await getJobs();
+    jobs = await getJobs(user.id);
   } catch (error) {
     if (isNextRedirectError(error)) {
       throw error;

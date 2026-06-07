@@ -360,7 +360,7 @@
   }
   .theme-modal-overlay {
     background: var(--overlay-background) !important;
-    backdrop-filter: blur(18px) saturate(0.9);
+    backdrop-filter: blur(7.5px) saturate(0.5);
   }
   .signout-dialog {
     background: var(--surface);

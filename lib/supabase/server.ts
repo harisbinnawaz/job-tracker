@@ -1,6 +1,11 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+export type VerifiedUser = {
+  id: string;
+  email?: string;
+};
+
 export async function createClient() {
   const cookieStore = await cookies();
 
@@ -24,4 +29,24 @@ export async function createClient() {
       },
     }
   );
+}
+
+export async function getVerifiedUser() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.getClaims();
+
+  if (error || !data?.claims?.sub) {
+    return null;
+  }
+
+  return {
+    id: data.claims.sub,
+    email:
+      typeof data.claims.email === "string" ? data.claims.email : undefined,
+  } as VerifiedUser;
+}
+
+export async function getVerifiedUserId() {
+  const user = await getVerifiedUser();
+  return user?.id ?? null;
 }
